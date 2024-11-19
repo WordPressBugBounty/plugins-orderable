@@ -345,7 +345,7 @@ class Orderable_Location_Single {
 			}
 		}
 
-		wp_cache_set( $cache_key, $service_hours );
+		wp_cache_set( $cache_key, $service_hours, '', ORDERABLE_CACHE_EXPIRATION_TIME );
 
 		// phpcs:ignore WooCommerce.Commenting.CommentHooks.MissingHookComment
 		return apply_filters( 'orderable_get_service_hours', $service_hours, $this, $service_type, $is_admin, $skip_zone );
@@ -815,7 +815,7 @@ class Orderable_Location_Single {
 			 */
 			$service_dates = apply_filters( 'orderable_location_service_dates', $result, $type, $this );
 
-			wp_cache_set( $cache_key, $service_dates );
+			wp_cache_set( $cache_key, $service_dates, '', ORDERABLE_CACHE_EXPIRATION_TIME );
 
 			return $service_dates;
 		}
@@ -838,7 +838,7 @@ class Orderable_Location_Single {
 			 */
 			$service_dates = apply_filters( 'orderable_location_service_dates', $result, $type, $this );
 
-			wp_cache_set( $cache_key, $service_dates );
+			wp_cache_set( $cache_key, $service_dates, '', ORDERABLE_CACHE_EXPIRATION_TIME );
 
 			return $service_dates;
 		}
@@ -858,7 +858,7 @@ class Orderable_Location_Single {
 			 */
 			$service_dates = apply_filters( 'orderable_location_service_dates', $result, $type, $this );
 
-			wp_cache_set( $cache_key, $service_dates );
+			wp_cache_set( $cache_key, $service_dates, '', ORDERABLE_CACHE_EXPIRATION_TIME );
 
 			return $service_dates;
 		}
@@ -1028,7 +1028,7 @@ class Orderable_Location_Single {
 		 */
 		$service_dates = apply_filters( 'orderable_location_service_dates', $service_dates, $type, $this );
 
-		wp_cache_set( $cache_key, $service_dates );
+		wp_cache_set( $cache_key, $service_dates, '', ORDERABLE_CACHE_EXPIRATION_TIME );
 
 		return $service_dates;
 	}

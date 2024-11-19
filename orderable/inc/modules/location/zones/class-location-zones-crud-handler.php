@@ -144,11 +144,14 @@ class Orderable_Location_Zones_CRUD_Handler {
 			$zone->update_meta_data( 'delivery_fee', $data['zone_fee'] );
 
 			$normalized_postcodes = array_map( 'wc_normalize_postcode', explode( ',', $data['zone_postcodes'] ) );
-			$locations            = ( ! empty( $data['zone_postcodes'] ) ) ? self::convert_postcodes_to_locations( $normalized_postcodes ) : array();
+			// clear postcodes but keep other locations type e.g. state, country.
+			$zone->clear_locations( ['postcode'] );
 
 			// NOTE: Shipping methods are added in class-location-zones.php;
 			// see the `on_shipping_zone_save` method.
-			$zone->set_locations( $locations );
+			foreach ( $normalized_postcodes as $postcode ) {
+				$zone->add_location( $postcode, 'postcode' );
+			}
 
 			$data_store->update( $zone );
 

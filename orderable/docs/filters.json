@@ -563,6 +563,39 @@
             "args": 3
         },
         {
+            "name": "orderable_get_time_slots_for_zone",
+            "file": "inc/modules/location/zones/class-location-zones.php",
+            "type": "filter",
+            "doc": {
+                "description": "Module: Location (Zones).",
+                "long_description": "",
+                "tags": [
+                    {
+                        "name": "since",
+                        "content": "1.18.0"
+                    },
+                    {
+                        "name": "package",
+                        "content": "Orderable/Classes"
+                    }
+                ],
+                "long_description_html": ""
+            },
+            "args": 2
+        },
+        {
+            "name": "orderable_get_time_slots_for_zone",
+            "file": "inc/modules/location/zones/class-location-zones.php",
+            "type": "filter",
+            "doc": {
+                "description": "",
+                "long_description": "",
+                "tags": [],
+                "long_description_html": ""
+            },
+            "args": 2
+        },
+        {
             "name": "orderable_get_unique_categories",
             "file": "inc/modules/layouts/class-layouts.php",
             "type": "filter",
@@ -972,6 +1005,23 @@
                         "types": [
                             "array"
                         ]
+                    }
+                ],
+                "long_description_html": ""
+            },
+            "args": 1
+        },
+        {
+            "name": "orderable_location_open_hours_override_description",
+            "file": "inc/modules/location/admin/meta-boxes/class-location-open-hours-meta-box.php",
+            "type": "filter",
+            "doc": {
+                "description": "Filter the override open hours description.",
+                "long_description": "",
+                "tags": [
+                    {
+                        "name": "since",
+                        "content": "1.18.0"
                     }
                 ],
                 "long_description_html": ""

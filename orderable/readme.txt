@@ -2,9 +2,9 @@
 Contributors: orderable
 Tags: restaurant, food ordering, food menu, food delivery, restaurant menu
 Requires at least: 5.4
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.16.0
+Stable tag: 1.17.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -185,6 +185,14 @@ Great question. While we haven't tested every WordPress theme, Orderable was des
 Glad you asked! [Orderable Pro](https://orderable.com/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) is an optional add-on to Orderable that adds additional revenue increasing features.
 
 == Changelog ==
+**v1.17.0** (19 Nov 2024)
+[fix] Compatibility with Flux Checkout for WooCommerce plugin
+[fix] Incorrect shipping methods showing in the Find Locations modal
+[fix] Region being removed from shipping zones when a zone is added to a location
+[fix] Order Date block to be compatible with the new WooCommerce Local pickup
+[fix] Description accordion showing when the product description is empty
+[fix] Race condition causing page to reload when changing tabs for locations in WCFM dashboard
+
 **v1.16.0** (28 Aug 2024)
 [new] Multi-vendor plugin integration
 [update] Deprecate the function `Orderable_Location::get_main_location_post_id`

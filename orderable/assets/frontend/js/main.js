@@ -1509,6 +1509,9 @@ let orderable_timings = {}; // Make this global so pro modules can access it.
       e.stopImmediatePropagation();
       const $trigger_element = $(this),
         trigger = $trigger_element.data('orderable-trigger');
+      if ($trigger_element.is('button') || $trigger_element.is('a')) {
+        e.preventDefault();
+      }
       $(document.body).trigger('orderable-' + trigger, [$trigger_element]);
     }
   };

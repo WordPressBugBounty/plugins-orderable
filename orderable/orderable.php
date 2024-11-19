@@ -3,11 +3,11 @@
  * Plugin Name: Orderable - Local Ordering System
  * Author URI: https://orderable.com
  * Description: Take local online ordering to a whole new level with Orderable.
- * Version: 1.16.0
+ * Version: 1.17.0
  * Author: Orderable
  * Text Domain: orderable
  * WC requires at least: 5.4.0
- * WC tested up to: 9.2
+ * WC tested up to: 9.4
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -19,12 +19,12 @@ class Orderable {
 	/**
 	 * @var string Plugin version.
 	 */
-	public static $version = '1.16.0';
+	public static $version = '1.17.0';
 
 	/**
 	 * @var string Required pro version.
 	 */
-	public static $required_pro_version = '1.16.0';
+	public static $required_pro_version = '1.17.0';
 
 	/**
 	 * Construct the plugin.
@@ -163,6 +163,7 @@ class Orderable {
 		$this->define( 'ORDERABLE_BASENAME', plugin_basename( __FILE__ ) );
 		$this->define( 'ORDERABLE_LANGUAGES_PATH', dirname( ORDERABLE_BASENAME ) . '/languages/' );
 		$this->define( 'ORDERABLE_VERSION', self::$version );
+		$this->define( 'ORDERABLE_CACHE_EXPIRATION_TIME', 5 * MINUTE_IN_SECONDS );
 	}
 
 	/**
@@ -194,6 +195,7 @@ class Orderable {
 		require_once ORDERABLE_INC_PATH . 'class-shortcodes.php';
 		require_once ORDERABLE_INC_PATH . 'class-ask-review.php';
 		require_once ORDERABLE_INC_PATH . 'class-integrations.php';
+		require_once ORDERABLE_INC_PATH . 'class-compat-flux-checkout.php';
 
 		Orderable_Settings::run();
 		Orderable_Assets::run();
@@ -203,6 +205,7 @@ class Orderable {
 		Orderable_Shortcodes::run();
 		Orderable_Ask_Review::run();
 		Orderable_Integrations::run();
+		Orderable_Compat_Flux_Checkout::run();
 	}
 
 	/**

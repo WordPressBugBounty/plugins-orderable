@@ -340,6 +340,10 @@ class Orderable_Location_Admin {
 
 		foreach ( WC_Shipping_Zones::get_zones() as $zone ) {
 			wp_cache_delete( 'orderable_time_slots_for_zone_' . $zone['zone_id'] );
+			wp_cache_delete( "has_zone_{$location_id}_{$zone['zone_id']}_true" );
+			wp_cache_delete( "has_zone_{$location_id}_{$zone['zone_id']}_false" );
+			wp_cache_delete( "{$time_slots_cache_key}_delivery_{$zone['zone_id']}" );
+			wp_cache_delete( "{$time_slots_cache_key}_pickup_{$zone['zone_id']}" );
 		}
 
 		if ( empty( $data['store_general_service_hours_delivery'] ) || ! is_array( $data['store_general_service_hours_delivery'] ) ) {

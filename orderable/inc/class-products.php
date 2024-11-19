@@ -829,25 +829,37 @@ class Orderable_Products {
 	 * @return array
 	 */
 	public static function get_accordion_data( $product ) {
-		$data = array();
+		$data = [];
 
 		$description = Orderable_Settings::get_setting( 'drawer_quickview_description' );
 
-		if ( 'none' !== $description ) {
-			$description = 'short' === $description ? $product->get_short_description() : $product->get_description();
-
-			$data[] = array(
-				'title'   => __( 'Description', 'orderable' ),
-				'content' => apply_filters( 'the_content', $description ),
-				'id'      => 'accordion-description',
-			);
+		if ( 'none' === $description ) {
+			// phpcs:ignore WooCommerce.Commenting.CommentHooks
+			return apply_filters( 'orderable_get_accordion_data', $data, $product );
 		}
+
+		$description = 'short' === $description ? $product->get_short_description() : $product->get_description();
+
+		// phpcs:ignore WooCommerce.Commenting.CommentHooks
+		$content = apply_filters( 'the_content', $description );
+
+		if ( empty( $content ) ) {
+			// phpcs:ignore WooCommerce.Commenting.CommentHooks
+			return apply_filters( 'orderable_get_accordion_data', $data, $product );
+		}
+
+		$data[] = array(
+			'title'   => __( 'Description', 'orderable' ),
+			'content' => $content,
+			'id'      => 'accordion-description',
+		);
 
 		/**
 		 * Filter product accordion data.
 		 *
 		 * @var array      $data
 		 * @var WC_Product $product
+		 * @since 1.0.0
 		 */
 		return apply_filters( 'orderable_get_accordion_data', $data, $product );
 	}
