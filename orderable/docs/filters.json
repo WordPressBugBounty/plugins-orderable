@@ -269,6 +269,30 @@
             "file": "inc/class-products.php",
             "type": "filter",
             "doc": {
+                "description": "",
+                "long_description": "",
+                "tags": [],
+                "long_description_html": ""
+            },
+            "args": 2
+        },
+        {
+            "name": "orderable_get_accordion_data",
+            "file": "inc/class-products.php",
+            "type": "filter",
+            "doc": {
+                "description": "",
+                "long_description": "",
+                "tags": [],
+                "long_description_html": ""
+            },
+            "args": 2
+        },
+        {
+            "name": "orderable_get_accordion_data",
+            "file": "inc/class-products.php",
+            "type": "filter",
+            "doc": {
                 "description": "Filter product accordion data.",
                 "long_description": "",
                 "tags": [
@@ -287,6 +311,10 @@
                             "\\WC_Product"
                         ],
                         "variable": "$product"
+                    },
+                    {
+                        "name": "since",
+                        "content": "1.0.0"
                     }
                 ],
                 "long_description_html": ""

@@ -4,7 +4,7 @@ Tags: restaurant, food ordering, food menu, food delivery, restaurant menu
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.17.0
+Stable tag: 1.17.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -185,6 +185,9 @@ Great question. While we haven't tested every WordPress theme, Orderable was des
 Glad you asked! [Orderable Pro](https://orderable.com/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) is an optional add-on to Orderable that adds additional revenue increasing features.
 
 == Changelog ==
+**v1.17.1** (10 Feb 2025)
+[fix] Compatibility issue with Xstore theme
+
 **v1.17.0** (19 Nov 2024)
 [fix] Compatibility with Flux Checkout for WooCommerce plugin
 [fix] Incorrect shipping methods showing in the Find Locations modal

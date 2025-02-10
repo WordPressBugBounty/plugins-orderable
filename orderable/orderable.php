@@ -3,11 +3,11 @@
  * Plugin Name: Orderable - Local Ordering System
  * Author URI: https://orderable.com
  * Description: Take local online ordering to a whole new level with Orderable.
- * Version: 1.17.0
+ * Version: 1.17.1
  * Author: Orderable
  * Text Domain: orderable
  * WC requires at least: 5.4.0
- * WC tested up to: 9.4
+ * WC tested up to: 9.6
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -19,7 +19,7 @@ class Orderable {
 	/**
 	 * @var string Plugin version.
 	 */
-	public static $version = '1.17.0';
+	public static $version = '1.17.1';
 
 	/**
 	 * @var string Required pro version.
