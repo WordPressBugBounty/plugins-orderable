@@ -40,6 +40,7 @@ class Orderable_Modules {
 			'order-reminders',
 			'table-ordering',
 			'product-labels',
+			'receipt-layouts',
 		);
 
 		foreach ( $modules as $module ) {

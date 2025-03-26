@@ -144,7 +144,11 @@ export const Block = ( { checkoutExtensionData, extensions, validation } ) => {
 	}, [ serviceDate, setValidationErrors, clearValidationError ] );
 
 	return (
-		<div className={`wp-block-orderable-checkout__service-date ${ hasNoServiceDateSelected ? 'has-error' : ''}`}>
+		<div
+			className={ `wp-block-orderable-checkout__service-date ${
+				hasNoServiceDateSelected ? 'has-error' : ''
+			}` }
+		>
 			{ hasNoServiceDatesAvailable?.message && (
 				<ValidationInputError
 					errorMessage={ hasNoServiceDatesAvailable.message }

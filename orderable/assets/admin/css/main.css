@@ -267,7 +267,7 @@
 body .submit .button-primary,
 .orderable-admin-button {
   /* stylelint-disable-next-line scss/no-global-function-names */
-  background: #2271b6;
+  background: rgb(34.2857142857, 113.1428571429, 181.7142857143);
   border: none;
   padding: 8px 15px;
   border-radius: 8px;
@@ -289,7 +289,7 @@ body .submit .button-primary:active, body .submit .button-primary:focus, body .s
 .orderable-admin-button:focus,
 .orderable-admin-button:hover {
   /* stylelint-disable-next-line scss/no-global-function-names */
-  background: #164975;
+  background: rgb(22.1428571429, 73.0714285714, 117.3571428571);
   color: #fff;
 }
 

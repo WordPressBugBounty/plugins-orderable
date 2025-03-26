@@ -4,7 +4,7 @@ Tags: restaurant, food ordering, food menu, food delivery, restaurant menu
 Requires at least: 5.4
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.17.1
+Stable tag: 1.18.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,8 @@ Orderable is an online food ordering system that is perfect for:
 * **[Lead Time](https://orderable.com/docs/how-to-set-your-order-lead-time/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) and Preorder Days** - Set lead time and preorder days for your orders so you have full control over your delivery schedule.
 * **[Holiday Scheduling](https://orderable.com/docs/how-to-set-holiday-hours/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - Prevent orders you can’t fulfill on specific dates/special occasions.
 * **[Live Order View](https://orderable.com/docs/how-to-process-orders/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - View, manage, and process orders in real-time via Orderable’s live order screen.
+* **Receipt/Ticket Printing** - Print orders directly to a local printer (physically or wirelessly connected). No need for a 3rd-party service.
+* **Receipt/Ticket Layouts** - Create and customize your own receipt layouts/designs of any kind, including Kitchen, Delivery, Packing Slip, and Order Confirmation receipts. 
 * **Mobile Friendly Ordering** - Allow customers to order from their mobile device. Orderable’s layouts are mobile-friendly.
 * **[Automated Pickup/Delivery Slot Reminder Emails](https://orderable.com/docs/time-slot-reminders/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - Send automated email reminders to customers who haven’t picked their slot yet.
 * **Floating Cart Widget** - Instead of taking customers to the default WooCommerce checkout, a floating cart widget lets them see their order at a glance.
@@ -93,6 +95,12 @@ For example, if your store only accepts pickup orders on Christmas Eve, you can 
 View, manage, and process orders in real-time with Orderable’s live order screen.
 
 This screen makes a noise when new orders come in and can be filtered for delivery and pickup orders so restaurant managers and kitchen staff can keep track.
+
+**✔️ Receipt/Ticket Printing and Customization**
+
+Print receipts/tickets for each order via the Orders/Live Order View page and the single order screen. This button opens a print dialogue box, allowing you to customize print settings and select your desired printer.
+
+Create and edit receipt layouts with the in-build WordPress block editor. Customize everything from spacing, to colors. With a selection of pre-built layouts (Kitchen, Delivery, Packing, and Order Confirmation), you can get set up in minutes. 
 
 **✔️ Automated Pickup/Delivery Slot Reminder Emails**
 
@@ -146,6 +154,7 @@ The premium version of Orderable provides you with a whole host of revenue-boost
 3. Set up automated customer timeslot reminder emails
 4. Customize and refine your delivery/order management schedule
 5. Manage orders in real-time with the live order view page
+6. Create and customize receipts/tickets
 
 == Frequently Asked Questions ==
 
@@ -156,6 +165,12 @@ One of the benefits of using Orderable is you are not charged additional fees on
 = Will Orderable work with my page builder? =
 
 Orderable will work with all major page builders. You simply create your ordering layout and use the provided shortcode in your page builder. Orderable also provides a native Gutenberg Block.
+
+= Do I need to use a 3rd-party service to print tickets/receipts? =
+
+Orderable has a receipt printing feature built-in. So, all you need is a local printer (physically or wirelessly connected) to start printing tickets/receipts. No need for a 3rd-party service.
+
+This doesn’t include remote printing. You will need to have your printer in the same physical location as your device using Orderable.
 
 = Can I install Orderable on my client's websites? =
 
@@ -174,7 +189,7 @@ Orderable only works with WordPress right now.
 
 = Do you have a public roadmap so I can see what you are planning? =
 
-You can access our roadmap and feature request board via the account area after purchasing Pro. We don't currently have a public-facing roadmap.
+You can access our [public roadmap](https://orderable.com/roadmap/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) on our website. After purchasing Orderable Pro, you can also access our roadmap and feature request board via the account area. 
 
 = Will Orderable work with my theme? =
 
@@ -185,6 +200,9 @@ Great question. While we haven't tested every WordPress theme, Orderable was des
 Glad you asked! [Orderable Pro](https://orderable.com/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) is an optional add-on to Orderable that adds additional revenue increasing features.
 
 == Changelog ==
+**v1.18.0** (26 Mar 2025)
+[new] Orderable Receipt Printing
+
 **v1.17.1** (10 Feb 2025)
 [fix] Compatibility issue with Xstore theme
 

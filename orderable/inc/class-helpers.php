@@ -556,4 +556,21 @@ class Orderable_Helpers {
 
 		return $image;
 	}
+
+	/**
+	 * Check the WooCommerce version
+	 *
+	 * @param string $version_to_compare The version to compare.
+	 * @param string $operator           The operator to compare. The same operators used by `version_compare`.
+	 * @return bool
+	 */
+	public static function woocommerce_version_compare( $version_to_compare, $operator ) {
+		$woocommerce_version = WC()->version ?? false;
+
+		if ( ! $woocommerce_version ) {
+			return false;
+		}
+
+		return version_compare( $woocommerce_version, $version_to_compare, $operator );
+	}
 }

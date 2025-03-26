@@ -6,7 +6,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-10 13:33+0000\n"
+"POT-Creation-Date: 2025-03-26 15:14+0000\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -357,7 +357,7 @@ msgstr ""
 msgid "Visibility"
 msgstr ""
 
-#: inc/class-settings.php:748, inc/class-settings.php:770
+#: inc/class-settings.php:748, inc/class-settings.php:770, inc/modules/receipt-layouts/class-receipt-layouts.php:990
 msgid "Default"
 msgstr ""
 
@@ -433,7 +433,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: inc/database/tables/class-location-locations-table.php:198
+#: inc/database/tables/class-location-locations-table.php:198, inc/modules/receipt-layouts/blocks/order-location/build/render.php:16, inc/modules/receipt-layouts/blocks/order-location/src/render.php:16
 msgid "Main Location"
 msgstr ""
 
@@ -752,6 +752,74 @@ msgstr ""
 
 #: inc/modules/product-labels/class-product-labels.php:37, inc/modules/product-labels/class-product-labels.php:37, inc/modules/product-labels/class-product-labels.php:44
 msgid "Product Labels"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:470
+msgid "Receipt Layouts"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:471
+msgid "Receipt Layout"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:744
+msgid "Orderable"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:861
+msgid "Orderable Receipt Layouts"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:919
+msgid "It's not possible to duplicate this receipt layout"
+msgstr ""
+
+#. translators: %s - Receipt Layout type.
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:926
+msgid "No %s to duplicate has been supplied!"
+msgstr ""
+
+#. translators: %1$s: Receipt Layout type; %2$d: Receipt Layout ID
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:942
+msgid "%1$s creation failed, could not find original post: %2$d"
+msgstr ""
+
+#. translators: %s contains the name of the original post.
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:951
+msgid "%s (Copy)"
+msgstr ""
+
+#. translators: %s - Receipt Layout type.
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:963
+msgid "%s creation failed"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:1004
+msgid "Print Order"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:1243
+msgid "Printing"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:1250
+msgid "Printing Settings"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:1256
+msgid "Default layout"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:1257
+msgid "Select the default receipt layout when printing an order."
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:1347
+msgid "No receipt layouts created"
+msgstr ""
+
+#: inc/modules/receipt-layouts/class-receipt-layouts.php:1355
+msgid "Select..."
 msgstr ""
 
 #: inc/modules/services/class-services-order.php:170
@@ -1347,4 +1415,42 @@ msgstr ""
 
 #: inc/modules/location/templates/zones/time-slot-no-delivery-zones.php:18
 msgid "No delivery zones have been added for these service hours. This slot will be available to all delivery zones that match the customer's address."
+msgstr ""
+
+#: inc/modules/receipt-layouts/blocks/customer-name/build/render.php:25, inc/modules/receipt-layouts/blocks/customer-name/src/render.php:25
+msgid "Customer name: "
+msgstr ""
+
+#: inc/modules/receipt-layouts/blocks/order-location/build/render.php:18, inc/modules/receipt-layouts/blocks/order-location/src/render.php:18
+msgid "Location:"
+msgstr ""
+
+#: inc/modules/receipt-layouts/blocks/order-number/build/render.php:15, inc/modules/receipt-layouts/blocks/order-number/src/render.php:15
+msgid "Order Number #"
+msgstr ""
+
+#: inc/modules/receipt-layouts/blocks/order-payment-method/build/render.php:15, inc/modules/receipt-layouts/blocks/order-payment-method/src/render.php:15
+msgid "Payment method: "
+msgstr ""
+
+#. translators: %1$s - date.
+#: inc/modules/receipt-layouts/blocks/order-service-date-time/build/render.php:35, inc/modules/receipt-layouts/blocks/order-service-date-time/src/render.php:35
+msgid "<span class=\"wp-block-orderable-receipt-layouts__label\">%1$s Date:</span> %2$s"
+msgstr ""
+
+#. translators: %1$s - time
+#: inc/modules/receipt-layouts/blocks/order-service-date-time/build/render.php:44, inc/modules/receipt-layouts/blocks/order-service-date-time/src/render.php:44
+msgid "<span class=\"wp-block-orderable-receipt-layouts__label\">%1$s Time:</span> %2$s"
+msgstr ""
+
+#: inc/modules/receipt-layouts/blocks/order-service-type/build/render.php:23, inc/modules/receipt-layouts/blocks/order-service-type/src/render.php:23
+msgid "Shipping:"
+msgstr ""
+
+#: inc/modules/receipt-layouts/blocks/order-table/build/render.php:25, inc/modules/receipt-layouts/blocks/order-table/src/render.php:25
+msgid "Table #"
+msgstr ""
+
+#: inc/modules/receipt-layouts/blocks/order-total-items/build/render.php:15, inc/modules/receipt-layouts/blocks/order-total-items/src/render.php:15
+msgid "Total items: "
 msgstr ""

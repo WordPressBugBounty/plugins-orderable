@@ -1270,6 +1270,112 @@
             "args": 1
         },
         {
+            "name": "orderable_order_meta_fields_block_metadata",
+            "file": "inc/modules/receipt-layouts/blocks/order-meta-fields/src/render.php",
+            "type": "filter",
+            "doc": {
+                "description": "Filter metadata to be used in the Order Meta Fields block.",
+                "long_description": "",
+                "tags": [
+                    {
+                        "name": "since",
+                        "content": "1.8.0"
+                    },
+                    {
+                        "name": "hook",
+                        "content": "orderable_order_meta_fields_block_metadata"
+                    },
+                    {
+                        "name": "param",
+                        "content": "The order metadata.",
+                        "types": [
+                            "array"
+                        ],
+                        "variable": "$metadata"
+                    },
+                    {
+                        "name": "param",
+                        "content": "The order object.",
+                        "types": [
+                            "\\WC_Order"
+                        ],
+                        "variable": "$order"
+                    },
+                    {
+                        "name": "param",
+                        "content": "Fields to include.",
+                        "types": [
+                            "array"
+                        ],
+                        "variable": "$fields_to_include"
+                    },
+                    {
+                        "name": "param",
+                        "content": "Fields to exclude.",
+                        "types": [
+                            "array"
+                        ],
+                        "variable": "$fields_to_exclude"
+                    }
+                ],
+                "long_description_html": ""
+            },
+            "args": 4
+        },
+        {
+            "name": "orderable_order_meta_fields_block_metadata",
+            "file": "inc/modules/receipt-layouts/blocks/order-meta-fields/build/render.php",
+            "type": "filter",
+            "doc": {
+                "description": "Filter metadata to be used in the Order Meta Fields block.",
+                "long_description": "",
+                "tags": [
+                    {
+                        "name": "since",
+                        "content": "1.8.0"
+                    },
+                    {
+                        "name": "hook",
+                        "content": "orderable_order_meta_fields_block_metadata"
+                    },
+                    {
+                        "name": "param",
+                        "content": "The order metadata.",
+                        "types": [
+                            "array"
+                        ],
+                        "variable": "$metadata"
+                    },
+                    {
+                        "name": "param",
+                        "content": "The order object.",
+                        "types": [
+                            "\\WC_Order"
+                        ],
+                        "variable": "$order"
+                    },
+                    {
+                        "name": "param",
+                        "content": "Fields to include.",
+                        "types": [
+                            "array"
+                        ],
+                        "variable": "$fields_to_include"
+                    },
+                    {
+                        "name": "param",
+                        "content": "Fields to exclude.",
+                        "types": [
+                            "array"
+                        ],
+                        "variable": "$fields_to_exclude"
+                    }
+                ],
+                "long_description_html": ""
+            },
+            "args": 4
+        },
+        {
             "name": "orderable_order_reminders_get_orders_query_args",
             "file": "inc/modules/order-reminders/class-order-reminders.php",
             "type": "filter",

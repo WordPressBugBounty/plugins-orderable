@@ -162,7 +162,7 @@
 @media screen and (max-width: 480px) {
   .orderable-products-list__item {
     padding: 0 0 24px;
-    border-bottom: 1px solid #ecf1f3;
+    border-bottom: 1px solid rgb(236.2195121951, 240.7268292683, 242.9804878049);
   }
   .orderable-products-list__item:last-child {
     border-bottom: none;
@@ -702,8 +702,8 @@ img + .orderable-product__tags {
 .orderable-button.orderable-button--out-of-stock:focus,
 .orderable-button.orderable-button--out-of-stock:active {
   cursor: not-allowed;
-  border-color: #c7d4db;
-  color: #a8bdc7;
+  border-color: rgb(198.9024390244, 212.3658536585, 219.0975609756);
+  color: rgb(167.8048780488, 188.7317073171, 199.1951219512);
   background: transparent !important;
 }
 
@@ -804,12 +804,12 @@ a.orderable-tabs__link {
   padding: 0 24px;
   white-space: nowrap;
   line-height: 40px;
-  color: #405763;
+  color: rgb(63.6097560976, 87.4634146341, 99.3902439024);
   font-weight: 400;
   border-radius: 20px;
   -webkit-transition: all 150ms ease-out;
   transition: all 150ms ease-out;
-  background: #ecf1f3;
+  background: rgb(236.2195121951, 240.7268292683, 242.9804878049);
 }
 
 a.orderable-tabs__link:active, a.orderable-tabs__link:focus {
@@ -819,9 +819,9 @@ a.orderable-tabs__link:active, a.orderable-tabs__link:focus {
 }
 
 a.orderable-tabs__link:hover, a.orderable-tabs__link:active, a.orderable-tabs__link:focus {
-  color: #405763;
+  color: rgb(63.6097560976, 87.4634146341, 99.3902439024);
   text-decoration: none;
-  background: #c7d4db;
+  background: rgb(198.9024390244, 212.3658536585, 219.0975609756);
 }
 
 .orderable-tabs__item--active a.orderable-tabs__link {
