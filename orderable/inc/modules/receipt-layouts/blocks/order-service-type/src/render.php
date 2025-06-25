@@ -18,11 +18,21 @@ if ( empty( $service_type ) ) {
 	return;
 }
 
-$service_type = Orderable_Services::get_service_label( $service_type );
+$label          = $attributes['label'] ?? __( 'Order Type:', 'orderable' );
+$delivery_label = empty( $attributes['deliveryLabel'] ) ? Orderable_Services::get_service_label( 'delivery' ) : $attributes['deliveryLabel'];
+$pickup_label   = empty( $attributes['pickupLabel'] ) ? Orderable_Services::get_service_label( 'pickup' ) : $attributes['pickupLabel'];
 
-$label = $attributes['label'] ?? __( 'Shipping:', 'orderable' );
+switch ( $service_type ) {
+	case 'pickup':
+		$service_label = $pickup_label;
+		break;
+
+	default:
+		$service_label = $delivery_label;
+		break;
+}
 ?>
 
 <div <?php echo wp_kses_data( Orderable_Receipt_Layouts::get_receipt_block_wrapper_attributes() ); ?>>
-	<?php printf( '<span class="wp-block-orderable-receipt-layouts__label">%s</span>%s', esc_html( $label ), esc_html( $service_type ) ); ?>
+	<?php printf( '<span class="wp-block-orderable-receipt-layouts__label">%s</span>%s', esc_html( $label ), esc_html( $service_label ) ); ?>
 </div>

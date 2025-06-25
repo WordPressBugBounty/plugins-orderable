@@ -15,12 +15,28 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { label: value } )
 						}
 					/>
+					<TextControl
+						label={ __( 'Delivery Label', 'orderable' ) }
+						placeholder={ __( 'Delivery ', 'orderable' ) }
+						value={ attributes.deliveryLabel }
+						onChange={ ( value ) =>
+							setAttributes( { deliveryLabel: value } )
+						}
+					/>
+					<TextControl
+						label={ __( 'Pickup Label', 'orderable' ) }
+						placeholder={ __( 'Pickup', 'orderable' ) }
+						value={ attributes.pickupLabel }
+						onChange={ ( value ) =>
+							setAttributes( { pickupLabel: value } )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 			<span className="wp-block-orderable-receipt-layouts__label">
 				{ attributes.label }
 			</span>
-			{ __( 'Delivery', 'orderable' ) }
+			{ attributes.deliveryLabel || __( 'Delivery', 'orderable' ) }
 		</div>
 	);
 }

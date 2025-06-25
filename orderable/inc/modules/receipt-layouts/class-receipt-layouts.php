@@ -26,6 +26,8 @@ class Orderable_Receipt_Layouts {
 	 * Init.
 	 */
 	public static function run() {
+		add_filter( 'wpsf_register_settings_orderable', [ __CLASS__, 'add_settings' ] );
+
 		if ( self::should_disable_module() ) {
 			return;
 		}
@@ -41,6 +43,7 @@ class Orderable_Receipt_Layouts {
 		add_action( 'admin_print_footer_scripts-woocommerce_page_wc-orders', [ __CLASS__, 'add_print_order_buttons_to_hpos_edit_order_page' ] );
 		add_action( 'admin_print_footer_scripts-post.php', [ __CLASS__, 'add_print_order_buttons_to_edit_order_page' ] );
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_assets_to_orders_page' ] );
+		add_action( 'admin_print_styles', [ __CLASS__, 'output_custom_block_editor_style' ], 50 );
 
 		add_filter( 'block_categories_all', [ __CLASS__, 'add_orderable_block_category' ], 10, 2 );
 		add_filter( 'allowed_block_types_all', [ __CLASS__, 'get_allowed_blocks' ], 10, 2 );
@@ -48,7 +51,6 @@ class Orderable_Receipt_Layouts {
 		add_filter( 'should_load_remote_block_patterns', [ __CLASS__, 'skip_remote_block_patterns' ], 15 );
 		add_filter( 'post_row_actions', [ __CLASS__, 'add_duplicate_row_action_link' ], 10, 2 );
 		add_filter( 'woocommerce_admin_order_preview_get_order_details', [ __CLASS__, 'add_print_order_button_to_preview_order_details' ] );
-		add_filter( 'wpsf_register_settings_orderable', [ __CLASS__, 'add_settings' ] );
 	}
 
 	/**
@@ -57,7 +59,21 @@ class Orderable_Receipt_Layouts {
 	 * @return boolean
 	 */
 	protected static function should_disable_module() {
-		$disable = class_exists( 'Zprint\Setup' ) || Orderable_Helpers::woocommerce_version_compare( '8.7', '<' );
+		switch ( true ) {
+			case Orderable_Helpers::woocommerce_version_compare( '8.7', '<' ):
+				$disable = true;
+				break;
+
+			case self::is_bizprint_activated():
+				$enable_with_bizprint = Orderable_Settings::get_setting( 'printing_compatibility_enable_with_bizprint' );
+				$disable              = ! $enable_with_bizprint;
+				break;
+
+			default:
+				$disable = false;
+				break;
+		}
+
 		/**
 		 * Filter whether the Receipt Layouts module should be disabled.
 		 *
@@ -67,6 +83,16 @@ class Orderable_Receipt_Layouts {
 		 * @return bool
 		 */
 		return apply_filters( 'orderable_disable_receipt_layouts_module', $disable );
+	}
+
+	/**
+	 * Check if BizPrint Print Manager for WooCommerce is activated
+	 *
+	 * @see https://wordpress.org/plugins/print-google-cloud-print-gcp-woocommerce/
+	 * @return boolean
+	 */
+	protected static function is_bizprint_activated() {
+		return class_exists( 'Zprint\Setup' );
 	}
 
 	/**
@@ -138,6 +164,9 @@ class Orderable_Receipt_Layouts {
 	 * @return string
 	 */
 	protected static function apply_layout( $order, $layout ) {
+		$font_size = self::get_default_font_size();
+		$max_width = self::get_default_max_width();
+
 		ob_start();
 		$css = include __DIR__ . '/templates/order-receipt-css.php';
 		$css = ob_get_contents();
@@ -604,11 +633,79 @@ class Orderable_Receipt_Layouts {
 
 		wp_enqueue_script(
 			'orderable-receipt-admin',
-			ORDERABLE_URL . 'inc/modules/receipt-layouts/assets/admin/js/block-editor/main' . $suffix_css . '.js',
+			ORDERABLE_URL . 'inc/modules/receipt-layouts/assets/admin/js/block-editor/main' . $suffix . '.js',
 			[ 'wp-hooks' ],
 			ORDERABLE_VERSION,
 			true
 		);
+
+		$welcome_guide_script_id = 'orderable-receipt-welcome-guide';
+		$script_asset_path       = __DIR__ . '/assets/admin/js/block-editor/welcome-guide/index.asset.php';
+		$script_asset            = file_exists( $script_asset_path )
+			? require $script_asset_path
+			: [
+				'dependencies' => [],
+				'version'      => ORDERABLE_VERSION,
+			];
+
+		wp_enqueue_script(
+			$welcome_guide_script_id,
+			ORDERABLE_URL . 'inc/modules/receipt-layouts/assets/admin/js/block-editor/welcome-guide/index.js',
+			$script_asset['dependencies'],
+			$script_asset['version'],
+			true
+		);
+
+		wp_localize_script(
+			$welcome_guide_script_id,
+			'orderableReceiptWelcomeGuide',
+			[
+				'shouldShowWelcomeGuide' => self::should_show_welcome_guide(),
+			]
+		);
+
+		$preview_sidebar_script_id = 'orderable-receipt-preview-sidebar';
+		$script_asset_path         = __DIR__ . '/assets/admin/js/block-editor/preview-sidebar/index.asset.php';
+		$script_asset              = file_exists( $script_asset_path )
+			? require $script_asset_path
+			: [
+				'dependencies' => [],
+				'version'      => ORDERABLE_VERSION,
+			];
+
+		wp_enqueue_script(
+			$preview_sidebar_script_id,
+			ORDERABLE_URL . 'inc/modules/receipt-layouts/assets/admin/js/block-editor/preview-sidebar/index.js',
+			$script_asset['dependencies'],
+			$script_asset['version'],
+			true
+		);
+	}
+
+	/**
+	 * Whether should show the Welcome Guide.
+	 *
+	 * @return boolean
+	 */
+	protected static function should_show_welcome_guide() {
+		$has_seen_welcome_guide_key = 'orderable_receipt_has_seen_welcome_guide';
+		$has_seen_welcome_guide     = get_user_option( $has_seen_welcome_guide_key );
+
+		if ( $has_seen_welcome_guide ) {
+			// phpcs:ignore WooCommerce.Commenting.CommentHooks
+			return apply_filters( 'orderable_receipt_should_show_welcome_guide', false );
+		}
+
+		update_user_option( get_current_user_id(), $has_seen_welcome_guide_key, true );
+
+		/**
+		 * Filter whether should show the Welcome Guide.
+		 *
+		 * @since 1.19.0
+		 * @hook orderable_receipt_should_show_welcome_guide
+		 * @param  bool $should_show Whether should show the Welcome Guide.
+		 */
+		return apply_filters( 'orderable_receipt_should_show_welcome_guide', true );
 	}
 
 	/**
@@ -1258,8 +1355,41 @@ class Orderable_Receipt_Layouts {
 					'type'     => 'select',
 					'choices'  => self::get_receipt_layouts_options(),
 				],
+				[
+					'id'       => 'default_font_size',
+					'title'    => __( 'Default font size', 'orderable' ),
+					'subtitle' => __( 'Set the default font size for text across the entire layout.', 'orderable' ),
+					'type'     => 'custom',
+					'output'   => self::output_default_font_size_field(),
+				],
+				[
+					'id'       => 'max_preview_width',
+					'title'    => __( 'Maximum preview width', 'orderable' ),
+					'subtitle' => __( 'Enforces a max width in the editor and in the generated preview.', 'orderable' ),
+					'type'     => 'custom',
+					'output'   => self::output_maximum_preview_width_field(),
+				],
 			],
 		];
+
+		if ( self::is_bizprint_activated() ) {
+			$settings['sections'][] = [
+				'tab_id'              => 'printing',
+				'section_id'          => 'compatibility',
+				'section_title'       => __( 'Compatibility', 'orderable' ),
+				'section_description' => '',
+				'section_order'       => 0,
+				'fields'              => [
+					[
+						'id'       => 'enable_with_bizprint',
+						'title'    => __( 'Enable with BizPrint', 'orderable' ),
+						'subtitle' => __( 'By default, Receipt Layouts is disabled when BizPrint is enabled. Check this field if you want to run both together.', 'orderable' ),
+						'type'     => 'checkbox',
+					],
+
+				],
+			];
+		}
 
 		return $settings;
 	}
@@ -1456,5 +1586,139 @@ class Orderable_Receipt_Layouts {
 			update_option( $option_key, true, false );
 			return;
 		}
+	}
+
+	/**
+	 * Output the select field to show the unit options.
+	 *
+	 * @param string $setting_name  The settings name.
+	 * @param string $default_value The default value to be selected.
+	 * @return void
+	 */
+	protected static function unit_options_select_field( $setting_name, $default_value ) {
+		$option         = Orderable_Settings::get_setting( $setting_name );
+		$selected_value = $option['unit'] ?? $default_value;
+
+		$unit_options = [
+			'pt' => __( 'Point', 'orderable' ),
+			'px' => __( 'Pixel', 'orderable' ),
+			'cm' => __( 'Centimeters', 'orderable' ),
+			'in' => __( 'Inches', 'orderable' ),
+			'mm' => __( 'Millimeters', 'orderable' ),
+		];
+
+		?>
+		<select name='orderable_settings[<?php echo esc_attr( $setting_name ); ?>][unit]'>
+			<?php foreach ( $unit_options as $value => $label ) : ?>
+				<option
+					value="<?php echo esc_attr( $value ); ?>"
+					<?php selected( $selected_value, $value ); ?>
+				>
+					<?php echo esc_html( $label ); ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
+		<?php
+	}
+
+	/**
+	 * The default font size field.
+	 *
+	 * @return string
+	 */
+	protected static function output_default_font_size_field() {
+		$default_font_size = Orderable_Settings::get_setting( 'printing_printing_settings_default_font_size' );
+		$font_size         = $default_font_size['value'] ?? '12';
+
+		ob_start();
+		?>
+		<div style="display: flex;">
+			<input 
+				type="number" 
+				name='orderable_settings[printing_printing_settings_default_font_size][value]' 
+				value="<?php echo esc_attr( $font_size ); ?>"
+				min="0"
+			/>
+			<?php self::unit_options_select_field( 'printing_printing_settings_default_font_size', 'pt' ); ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * The Maximum preview width field.
+	 *
+	 * @return string
+	 */
+	protected static function output_maximum_preview_width_field() {
+		$default_maximum_preview_width = Orderable_Settings::get_setting( 'printing_printing_settings_maximum_preview_width_field' );
+		$width                         = $default_maximum_preview_width['value'] ?? '768';
+
+		ob_start();
+		?>
+		<div style="display: flex;">
+			<input 
+				type="number" 
+				name='orderable_settings[printing_printing_settings_maximum_preview_width_field][value]' 
+				value="<?php echo esc_attr( $width ); ?>"
+				min="0"
+			/>
+			<?php self::unit_options_select_field( 'printing_printing_settings_maximum_preview_width_field', 'px' ); ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get the default font size setting.
+	 *
+	 * @return string
+	 */
+	protected static function get_default_font_size() {
+		$font_size  = Orderable_Settings::get_setting( 'printing_printing_settings_default_font_size' );
+		$font_value = $font_size['value'] ?? 12;
+		$font_unit  = $font_size['unit'] ?? 'pt';
+
+		return $font_value . $font_unit;
+	}
+
+	/**
+	 * Get the default max width setting.
+	 *
+	 * @return string
+	 */
+	protected static function get_default_max_width() {
+		$max_width       = Orderable_Settings::get_setting( 'printing_printing_settings_maximum_preview_width_field' );
+		$max_width_value = $max_width['value'] ?? 768;
+		$max_width_unit  = $max_width['unit'] ?? 'px';
+
+		return $max_width_value . $max_width_unit;
+	}
+
+	/**
+	 * Output the custom styles to the block editor defined on the Printing settings page.
+	 *
+	 * @return void
+	 */
+	public static function output_custom_block_editor_style() {
+		if ( ! self::is_orderable_receipt_block_editor_page() ) {
+			return;
+		}
+
+		$font_size = self::get_default_font_size();
+		$max_width = self::get_default_max_width();
+
+		?>
+			<style>
+				html .post-type-orderable_receipt :where(.wp-block):not(h1, h2, h3, h4, h5, h6) {
+					font-size: <?php echo esc_html( $font_size ); ?> !important;
+				}
+
+				html .post-type-orderable_receipt .wp-block-post-content,
+				html .post-type-orderable_receipt .editor-styles-wrapper .wp-block {
+					max-width: <?php echo esc_html( $max_width ); ?> !important;
+				}
+			</style>
+		<?php
 	}
 }

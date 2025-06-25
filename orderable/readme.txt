@@ -2,9 +2,9 @@
 Contributors: orderable
 Tags: restaurant, food ordering, food menu, food delivery, restaurant menu
 Requires at least: 5.4
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 1.18.0
+Stable tag: 1.19.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -200,6 +200,12 @@ Great question. While we haven't tested every WordPress theme, Orderable was des
 Glad you asked! [Orderable Pro](https://orderable.com/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) is an optional add-on to Orderable that adds additional revenue increasing features.
 
 == Changelog ==
+**v1.19.0** (25 Jun 2025)
+[new] Welcome Guide to the Receipt Layouts
+[new] Preview button on the Receipt Layouts
+[new] Global settings for Receipt Layouts
+[update] Additional editable strings for Receipt Layouts blocks
+
 **v1.18.0** (26 Mar 2025)
 [new] Orderable Receipt Printing
 

@@ -15,6 +15,18 @@
       "type": "string",
       "default": "Totals:"
     },
+    "subtotalLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "discountLabel": {
+      "type": "string",
+      "default": ""
+    },
+    "totalLabel": {
+      "type": "string",
+      "default": ""
+    },
     "style": {
       "type": "object",
       "default": {

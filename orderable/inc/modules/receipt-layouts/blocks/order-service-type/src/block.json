@@ -10,6 +10,14 @@
 		"label": {
 			"type": "string",
 			"default": "Order Type: "
+		},
+		"deliveryLabel": {
+			"type": "string",
+			"default": "Delivery"
+		},
+		"pickupLabel": {
+			"type": "string",
+			"default": "Pickup"
 		}
 	},
 	"textdomain": "orderable",

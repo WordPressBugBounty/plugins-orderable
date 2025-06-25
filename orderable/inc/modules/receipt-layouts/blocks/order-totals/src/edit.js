@@ -22,6 +22,30 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { label: value } )
 						}
 					/>
+					<TextControl
+						label={ __( 'Subtotal Label', 'orderable' ) }
+						value={ attributes.subtotalLabel }
+						placeholder={ __( 'Subtotal: ', 'orderable' ) }
+						onChange={ ( value ) =>
+							setAttributes( { subtotalLabel: value } )
+						}
+					/>
+					<TextControl
+						label={ __( 'Discount Label', 'orderable' ) }
+						value={ attributes.discountLabel }
+						placeholder={ __( 'Discount: ', 'orderable' ) }
+						onChange={ ( value ) =>
+							setAttributes( { discountLabel: value } )
+						}
+					/>
+					<TextControl
+						label={ __( 'Total Label', 'orderable' ) }
+						value={ attributes.totalLabel }
+						placeholder={ __( 'Total: ', 'orderable' ) }
+						onChange={ ( value ) =>
+							setAttributes( { totalLabel: value } )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -33,21 +57,23 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			<div className="wp-block-orderable-order-totals__item">
 				<span className="wp-block-orderable-receipt-layouts__label">
-					{ __( 'Subtotal: ', 'orderable' ) }
+					{ attributes.subtotalLabel ||
+						__( 'Subtotal: ', 'orderable' ) }
 				</span>
 				{ __( '$15.00', 'orderable' ) }
 			</div>
 
 			<div className="wp-block-orderable-order-totals__item">
 				<span className="wp-block-orderable-receipt-layouts__label">
-					{ __( 'Discount: ', 'orderable' ) }
+					{ attributes.discountLabel ||
+						__( 'Discount: ', 'orderable' ) }
 				</span>
 				{ __( '-$2.00', 'orderable' ) }
 			</div>
 
 			<div className="wp-block-orderable-order-totals__item">
 				<span className="wp-block-orderable-receipt-layouts__label">
-					{ __( 'Total: ', 'orderable' ) }
+					{ attributes.totalLabel || __( 'Total: ', 'orderable' ) }
 				</span>
 				{ __( '$13.00', 'orderable' ) }
 			</div>

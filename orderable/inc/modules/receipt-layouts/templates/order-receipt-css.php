@@ -26,7 +26,7 @@
 
 html {
 	font-family: "Helvetica Neue", sans-serif;
-	font-size: 12pt;
+	font-size: <?php echo esc_html( $font_size ?? '12pt' ); ?>;
 	color: #000;
 }
 
@@ -43,7 +43,7 @@ html {
 }
 
 body {
-	max-width: 768px;
+	max-width: <?php echo esc_html( $max_width ?? '768px' ); ?>;
 }
 
 .wp-block-orderable-receipt-layouts,
