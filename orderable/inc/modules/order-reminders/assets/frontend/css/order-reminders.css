@@ -110,7 +110,7 @@
 }
 
 .orderable-order-date-time-reminders-modal__select[disabled] {
-  background-color: oklch(0.961151 0 0);
-  color: oklch(0.278078 0.029596 256.848/0.4);
+  background-color: oklch(96.1151% 0 0deg);
+  color: oklch(27.8078% 0.029596 256.848deg / 0.4);
   cursor: not-allowed;
 }

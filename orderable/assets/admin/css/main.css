@@ -281,7 +281,6 @@ body .submit .button-primary,
   display: inline-block;
   color: #fff;
   font-size: 14px;
-  /* stylelint-disable-next-line no-descending-specificity */
 }
 
 body .submit .button-primary:active, body .submit .button-primary:focus, body .submit .button-primary:hover,
@@ -305,6 +304,11 @@ body .submit .button-primary.orderable-trigger-element--active,
   background: #0a2135;
   color: #fff;
   cursor: default;
+}
+
+body .submit .button-primary,
+.orderable-admin-button {
+  /* stylelint-disable-next-line no-descending-specificity */
 }
 
 body .submit .button-primary .dashicons,
@@ -606,7 +610,6 @@ body input.datepicker {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  /* stylelint-disable-next-line no-descending-specificity */
 }
 
 .orderable-fields-row__header-title {
@@ -623,6 +626,10 @@ body input.datepicker {
 .orderable-fields-row__header-title span {
   font-size: 12px;
   opacity: 0.8;
+}
+
+.orderable-fields-row__header {
+  /* stylelint-disable-next-line no-descending-specificity */
 }
 
 .orderable-fields-row__header-action {

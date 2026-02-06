@@ -77,15 +77,16 @@ class Orderable_Location {
 
 		$location = self::get_main_location();
 
-		$settings['store_general_service_hours_delivery']    = $location->get_service_hours( 'delivery' );
-		$settings['store_general_service_hours_pickup']      = $location->get_service_hours( 'pickup' );
-		$settings['store_general_services']                  = $location->get_services();
-		$settings['store_general_service_hours_pickup_same'] = $location->get_pickup_hours_same_as_delivery();
-		$settings['store_general_asap']                      = $location->get_asap_settings();
-		$settings['store_general_lead_time']                 = $location->get_lead_time();
-		$settings['store_general_preorder']                  = $location->get_preorder_days();
-		$settings['store_general_calculation_method']        = $location->get_delivery_calculation_method();
-		$settings['orderable_override_open_hours']           = $location->get_override_default_open_hours();
+		$settings['store_general_service_hours_delivery']                   = $location->get_service_hours( 'delivery' );
+		$settings['store_general_service_hours_pickup']                     = $location->get_service_hours( 'pickup' );
+		$settings['store_general_services']                                 = $location->get_services();
+		$settings['store_general_service_hours_pickup_same']                = $location->get_pickup_hours_same_as_delivery();
+		$settings['store_general_asap']                                     = $location->get_asap_settings();
+		$settings['store_general_lead_time']                                = $location->get_lead_time();
+		$settings['store_general_preorder']                                 = $location->get_preorder_days();
+		$settings['store_general_calculation_method']                       = $location->get_delivery_calculation_method();
+		$settings['orderable_override_open_hours']                          = $location->get_override_default_open_hours();
+		$settings['orderable_enable_placing_orders_only_within_open_hours'] = $location->get_enable_placing_orders_only_within_open_hours();
 
 		return $settings;
 	}

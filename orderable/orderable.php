@@ -3,11 +3,11 @@
  * Plugin Name: Orderable - Local Ordering System
  * Author URI: https://orderable.com
  * Description: Take local online ordering to a whole new level with Orderable.
- * Version: 1.19.0
+ * Version: 1.20.0
  * Author: Orderable
  * Text Domain: orderable
  * WC requires at least: 5.4.0
- * WC tested up to: 9.9
+ * WC tested up to: 10.4
  * Requires PHP: 7.4
  */
 
@@ -20,7 +20,7 @@ class Orderable {
 	/**
 	 * @var string Plugin version.
 	 */
-	public static $version = '1.19.0';
+	public static $version = '1.20.0';
 
 	/**
 	 * @var string Required pro version.

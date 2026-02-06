@@ -10,7 +10,7 @@
 
     <!-- Configs -->
     <config name="minimum_supported_wp_version" value="5.2"/>
-    <config name="testVersion" value="7.1-"/>
+    <config name="testVersion" value="7.2-"/>
 
     <!-- Excludes -->
 	<exclude-pattern>*/dist/*</exclude-pattern>
@@ -58,5 +58,9 @@
 		<!-- Comment punctuation doesn't matter -->
 		<exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
 		<exclude name="Squiz.Commenting.FunctionComment.ThrowsNoFullStop"/>
+	</rule>
+
+	<rule ref="PHPCompatibilityWP">
+    	<include-pattern>*\.php$</include-pattern>
 	</rule>
 </ruleset>

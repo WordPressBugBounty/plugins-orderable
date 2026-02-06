@@ -47,6 +47,8 @@ class Orderable_Settings {
 		add_filter( 'iconic_onboard_save_orderable_result', array( __CLASS__, 'save_onboard_settings' ), 10, 2 );
 		add_filter( 'wpsf_title_orderable', array( __CLASS__, 'settings_logo' ) );
 		add_action( 'wpsf_after_title_orderable', array( __CLASS__, 'settings_header' ) );
+		add_action( 'wpsf_after_tab_links_orderable', array( __CLASS__, 'add_sidebar' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 
 		// Add category fields.
 		add_action( 'product_cat_add_form_fields', array( __CLASS__, 'add_category_fields' ), 20 );
@@ -64,6 +66,8 @@ class Orderable_Settings {
 	 */
 	public static function init_settings() {
 		require_once ORDERABLE_VENDOR_PATH . 'wp-settings-framework/wp-settings-framework.php';
+		require_once ORDERABLE_VENDOR_PATH . 'iconic-core/class-core-settings.php';
+		require_once ORDERABLE_VENDOR_PATH . 'iconic-core/class-core-cross-sells.php';
 
 		self::$settings_framework = new Orderable_Settings_Framework( null, self::$option_group );
 		self::$settings           = self::$settings_framework->get_settings();
@@ -1089,5 +1093,45 @@ class Orderable_Settings {
 	 */
 	public static function get_orderable_svg_icon() {
 		return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQ0IiBoZWlnaHQ9IjE4MyIgdmlld0JveD0iMCAwIDI0NCAxODMiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTE5MC40NzggMTY2LjdDMjI3LjM2MiAxNDIuNzEgMjUzLjI3MSA5MS44NDM4IDI0MC44NTYgNTYuMzA5NUMyMjguNDQyIDIwLjk1NTcgMTc3LjUyMyAwLjkzMzgzNSAxMjMuNzI3IDAuMDMxOTUxNEM3MC4xMDk3IC0wLjg2OTkzMyAxMy42MTQgMTcuMzQ4MSAyLjI3ODkxIDUxLjI1OUMtOS4yMzYxMyA4NS4xNjk4IDI0LjU4OTMgMTM0Ljk1NCA2NS40MzE3IDE2MS4yODlDMTA2LjA5NCAxODcuNjI0IDE1My43NzQgMTkwLjY5IDE5MC40NzggMTY2LjdaTTE4My4yMzQgNzguNzIwNkMxODMuMjM0IDgzLjkyNDEgMTc4LjEwOCA5MS42Mjg3IDE2Ny4zNDggOTEuNjI4N0MxNTYuNTg4IDkxLjYyODcgMTUxLjQ2MyA4My45MjQxIDE1MS40NjMgNzguNzIwNkMxNTEuNDYzIDczLjUxNzIgMTU2LjU4OCA2NS44MTI2IDE2Ny4zNDggNjUuODEyNkMxNzguMTA4IDY1LjgxMjYgMTgzLjIzNCA3My41MTcyIDE4My4yMzQgNzguNzIwNlpNMTY5LjExOCAxMjQuNjk3QzE5NS4zNDkgMTIzLjgyMiAyMTYuMzI4IDEwMy41NzIgMjE2LjMyOCA3OC43MjA2QzIxNi4zMjggNTMuMzEyNCAxOTQuMzk5IDMyLjcxNSAxNjcuMzQ4IDMyLjcxNUMxNjcuMjU3IDMyLjcxNSAxNjcuMTY3IDMyLjcxNTMgMTY3LjA3NiAzMi43MTU3SDg2LjczNUM4MS42NjMgMzIuNzE1NyA3Ny41NTEyIDM2LjgzNTIgNzcuNTUxMiA0MS45MTY4Qzc3LjU1MTIgNDYuOTk4NSA4MS42NjMgNTEuMTE4IDg2LjczNSA1MS4xMThIMTI4LjE2TDEyOC4xNDQgNTEuMTM3MUMxMzIuOTQyIDUxLjQ1MTEgMTM2LjczNiA1NS40NDE3IDEzNi43MzYgNjAuMzE4M0MxMzYuNzM2IDY1LjQgMTMyLjYxNiA2OS41MTk1IDEyNy41MzQgNjkuNTE5NUgxMTkuMzQ4TDExOS4zNDggNjkuNTIwMkg1My4wNjExQzQ3Ljk4OTEgNjkuNTIwMiA0My44NzczIDczLjYzOTcgNDMuODc3MyA3OC43MjEzQzQzLjg3NzMgODMuODAyOSA0Ny45ODkxIDg3LjkyMjQgNTMuMDYxMSA4Ny45MjI0SDEyNy42NTJDMTMyLjY4IDg3Ljk4NTQgMTM2LjczNiA5Mi4wODA0IDEzNi43MzYgOTcuMTIyOEMxMzYuNzM2IDEwMiAxMzIuOTQyIDEwNS45OSAxMjguMTQ0IDEwNi4zMDRMMTI4LjE2MSAxMDYuMzI1SDc0LjQ5QzY5LjQxNzkgMTA2LjMyNSA2NS4zMDYyIDExMC40NDQgNjUuMzA2MiAxMTUuNTI2QzY1LjMwNjIgMTIwLjYwNyA2OS40MTc5IDEyNC43MjcgNzQuNDkgMTI0LjcyN0gxNjguMzY5QzE2OC42MjEgMTI0LjcyNyAxNjguODcxIDEyNC43MTcgMTY5LjExOCAxMjQuNjk3Wk0xNTAuODY0IDEzNy41NDVDMTUyLjA2NSAxNDEuMTE4IDE0OS41NTggMTQ2LjIzMyAxNDUuOTg4IDE0OC42NDZDMTQyLjQzNSAxNTEuMDU4IDEzNy44MjEgMTUwLjc1IDEzMy44ODUgMTQ4LjEwMkMxMjkuOTMyIDE0NS40NTQgMTI2LjY1OSAxNDAuNDQ3IDEyNy43NzMgMTM3LjAzN0MxMjguODcgMTMzLjYyNyAxMzQuMzM4IDEzMS43OTUgMTM5LjUyNyAxMzEuODg2QzE0NC43MzQgMTMxLjk3NyAxNDkuNjYyIDEzMy45OSAxNTAuODY0IDEzNy41NDVaTTE2MS42NzYgMTM3LjU0NUMxNjAuNDc0IDE0MS4xMTggMTYyLjk4MiAxNDYuMjMzIDE2Ni41NTIgMTQ4LjY0NkMxNzAuMTA0IDE1MS4wNTggMTc0LjcxOSAxNTAuNzUgMTc4LjY1NCAxNDguMTAyQzE4Mi42MDcgMTQ1LjQ1NCAxODUuODgxIDE0MC40NDcgMTg0Ljc2NiAxMzcuMDM3QzE4My42NjkgMTMzLjYyNyAxNzguMjAyIDEzMS43OTUgMTczLjAxMiAxMzEuODg2QzE2Ny44MDYgMTMxLjk3NyAxNjIuODc3IDEzMy45OSAxNjEuNjc2IDEzNy41NDVaIiBmaWxsPSIjOUNBMUE4Ii8+DQo8L3N2Zz4=';
+	}
+
+	/**
+	 * Add sidebar
+	 *
+	 * @return void
+	 */
+	public static function add_sidebar() {
+		if ( self::is_orderable_pro_activated() || ! self::is_settings_page() ) {
+			return;
+		}
+
+		Orderable_Core_Settings::$args['account_link'] = 'https://my.orderable.com';
+		Orderable_Core_Settings::$args['utm_source']   = 'Orderable';
+
+		add_filter( 'orderable_skip_core_cross_sells_selected_plugins', '__return_true' );
+
+		Orderable_Core_Settings::add_sidebar();
+	}
+
+	/**
+	 * Enqueue scripts
+	 *
+	 * @return void
+	 */
+	public static function enqueue_scripts() {
+		if ( self::is_orderable_pro_activated() || ! self::is_settings_page() ) {
+			return;
+		}
+
+		wp_enqueue_style( 'wp-block-library' );
+	}
+
+	/**
+	 * Check if Orderable Pro is activated
+	 *
+	 * @return boolean
+	 */
+	protected static function is_orderable_pro_activated() {
+		return defined( 'ORDERABLE_PRO_VERSION' );
 	}
 }

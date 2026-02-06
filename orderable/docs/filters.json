@@ -1271,7 +1271,7 @@
         },
         {
             "name": "orderable_order_meta_fields_block_metadata",
-            "file": "inc/modules/receipt-layouts/blocks/order-meta-fields/src/render.php",
+            "file": "inc/modules/receipt-layouts/blocks/order-meta-fields/build/render.php",
             "type": "filter",
             "doc": {
                 "description": "Filter metadata to be used in the Order Meta Fields block.",
@@ -1324,7 +1324,7 @@
         },
         {
             "name": "orderable_order_meta_fields_block_metadata",
-            "file": "inc/modules/receipt-layouts/blocks/order-meta-fields/build/render.php",
+            "file": "inc/modules/receipt-layouts/blocks/order-meta-fields/src/render.php",
             "type": "filter",
             "doc": {
                 "description": "Filter metadata to be used in the Order Meta Fields block.",

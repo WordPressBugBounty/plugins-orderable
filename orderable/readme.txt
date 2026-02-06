@@ -2,9 +2,9 @@
 Contributors: orderable
 Tags: restaurant, food ordering, food menu, food delivery, restaurant menu
 Requires at least: 5.4
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 1.19.0
+Stable tag: 1.20.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,7 @@ Take your restaurant/food business online with the online ordering system plugin
 
 Add your dishes, create your online ordering restaurant menu, customize your pickup/food delivery schedule, and manage your orders with ease.
 
-With Orderable, you’ll have everything you need to take your restaurant business online, with no commissions and no added fees.
+With Orderable, you'll have everything you need to take your restaurant business online, with no commissions and no added fees.
 
 ## Who is Orderable for? ##
 
@@ -33,32 +33,33 @@ Orderable is an online food ordering system that is perfect for:
 * Local Hardware Stores
 * Speciality Stores
 
-## Orderable’s Features for Online Restaurant Ordering ##
+## Orderable's Features for Online Restaurant Ordering ##
 
 * **[Online Ordering Menu](https://orderable.com/docs/how-to-create-product-layouts/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - With our ready-made layouts, no coding skills are required to create your online menu.
 * **Zero Transaction Fees** - We charge no fees per transaction, and there are no hidden costs.
-* **[Delivery/Pickup Date Slots](https://orderable.com/docs/pickup-delivery-date-slots/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - Make restaurant management easy by setting exactly when you’re available to deliver and accept pickup orders.
+* **[Delivery/Pickup Date Slots](https://orderable.com/docs/pickup-delivery-date-slots/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - Make restaurant management easy by setting exactly when you're available to deliver and accept pickup orders.
 * **ASAP Delivery** - Allow customers to select ASAP as their delivery/pickup preference.
 * **[Lead Time](https://orderable.com/docs/how-to-set-your-order-lead-time/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) and Preorder Days** - Set lead time and preorder days for your orders so you have full control over your delivery schedule.
-* **[Holiday Scheduling](https://orderable.com/docs/how-to-set-holiday-hours/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - Prevent orders you can’t fulfill on specific dates/special occasions.
-* **[Live Order View](https://orderable.com/docs/how-to-process-orders/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - View, manage, and process orders in real-time via Orderable’s live order screen.
+* **[Holiday Scheduling](https://orderable.com/docs/how-to-set-holiday-hours/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - Prevent orders you can't fulfill on specific dates/special occasions.
+* **Restrict Orders to Open Hours** - Set your open hours and only allow orders within those times/days. 
+* **[Live Order View](https://orderable.com/docs/how-to-process-orders/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - View, manage, and process orders in real-time via Orderable's live order screen.
 * **Receipt/Ticket Printing** - Print orders directly to a local printer (physically or wirelessly connected). No need for a 3rd-party service.
 * **Receipt/Ticket Layouts** - Create and customize your own receipt layouts/designs of any kind, including Kitchen, Delivery, Packing Slip, and Order Confirmation receipts. 
-* **Mobile Friendly Ordering** - Allow customers to order from their mobile device. Orderable’s layouts are mobile-friendly.
-* **[Automated Pickup/Delivery Slot Reminder Emails](https://orderable.com/docs/time-slot-reminders/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - Send automated email reminders to customers who haven’t picked their slot yet.
+* **Mobile Friendly Ordering** - Allow customers to order from their mobile device. Orderable's layouts are mobile-friendly.
+* **[Automated Pickup/Delivery Slot Reminder Emails](https://orderable.com/docs/time-slot-reminders/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme)** - Send automated email reminders to customers who haven't picked their slot yet.
 * **Floating Cart Widget** - Instead of taking customers to the default WooCommerce checkout, a floating cart widget lets them see their order at a glance.
 
 Orderable works with the ecommerce plugin, WooCommerce (it even installs it for you). So you can use any online payment providers that WooCommerce offers (PayPal, Credit Card, Apple Pay, and more), add fees, and accept coupons.
 
-## Orderable’s (Free) Features in Detail ##
+## Orderable's (Free) Features in Detail ##
 
 The core Orderable plugin is 100% free. With this, you can start taking online orders in a matter of minutes. Here are the features that make Orderable the smart choice for your restaurant business.
 
 **✔️ Online Ordering Menu**
 
-By using Orderable, you’ll be able to create your online food menu in minutes.
+By using Orderable, you'll be able to create your online food menu in minutes.
 
-Once you’ve created your menu items/dishes, you can add them to an online menu that you customize. Display it as a grid or list layout, include images or not, and decide what you want to happen when a customer clicks on a dish.
+Once you've created your menu items/dishes, you can add them to an online menu that you customize. Display it as a grid or list layout, include images or not, and decide what you want to happen when a customer clicks on a dish.
 
 **✔️ Zero Transaction Fees**
 
@@ -70,9 +71,9 @@ The only time you might need to pay extra is when upgrading to the Pro version o
 
 Orderable allows you to select which days of the week you offer your pickup or delivery services and what delivery zones these apply to.
 
-You’ll be able to add as many of these as you like and customize them for pickup, delivery, and different days of the week.
+You'll be able to add as many of these as you like and customize them for pickup, delivery, and different days of the week.
 
-Let’s say you want to offer pickup only on the weekend. You can. Or you want to offer different delivery days for different delivery zones (with added delivery fees for the distance). You can do that, too.
+Let's say you want to offer pickup only on the weekend. You can. Or you want to offer different delivery days for different delivery zones (with added delivery fees for the distance). You can do that, too.
 
 **✔️ ASAP Delivery**
 
@@ -86,13 +87,19 @@ Preorder days allow you to control how many days in advance customers can order 
 
 **✔️ Holiday Scheduling**
 
-With Orderable, you’ll be able to set up specific holiday dates or special occasions where you won’t offer delivery and/or pickup services.
+With Orderable, you'll be able to set up specific holiday dates or special occasions where you won't offer delivery and/or pickup services.
 
 For example, if your store only accepts pickup orders on Christmas Eve, you can set up a holiday schedule to accept only this service without changing your entire schedule.
 
+**✔️ Restrict Orders to Open Hours**
+
+You can set your store's open hours with Orderable's built-in settings. Then, if you want to restrict orders to these hours, you can turn on the Orderable setting.
+
+When a customer attempts to place an order out of hours, they'll see a message at checkout telling them when you'll reopen.
+
 **✔️ Live Order View**
 
-View, manage, and process orders in real-time with Orderable’s live order screen.
+View, manage, and process orders in real-time with Orderable's live order screen.
 
 This screen makes a noise when new orders come in and can be filtered for delivery and pickup orders so restaurant managers and kitchen staff can keep track.
 
@@ -104,7 +111,7 @@ Create and edit receipt layouts with the in-build WordPress block editor. Custom
 
 **✔️ Automated Pickup/Delivery Slot Reminder Emails**
 
-Send automated email reminders to customers who haven’t picked their slot yet.
+Send automated email reminders to customers who haven't picked their slot yet.
 
 This is particularly useful for customers who checkout using Google or Apple Pay. Or if they forgot to set a date slot at the checkout.
 
@@ -118,7 +125,7 @@ You can customize where product information and the description appear in this l
 
 ## Take It a Step Further With Orderable Pro ##
 
-The premium version of Orderable provides you with a whole host of revenue-boosting and scheduling features. If you’re looking to take online ordering up a notch, [Orderable Pro](https://orderable.com/pricing/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) is for you.
+The premium version of Orderable provides you with a whole host of revenue-boosting and scheduling features. If you're looking to take online ordering up a notch, [Orderable Pro](https://orderable.com/pricing/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) is for you.
 
 **Here are all the additional features you get with Orderable Pro:**
 
@@ -131,10 +138,10 @@ The premium version of Orderable provides you with a whole host of revenue-boost
 * **Checkout Tipping** - Include tipping at the checkout and increase your average order value. Customize default tip amounts or offer a custom tip as determined by the customer.
 * **Timed Products** - Set up products/product categories that only appear on your menu for certain days of the week or times of the day. Perfect for breakfast/lunch menus.
 * **Maximum Orders Per Day/Slot** - Determine the maximum number of orders you can take per day or per time slot to keep on top of your orders.
-* **Custom Order Statuses** - Create order statuses that are custom to your business and delivery system. For example, ‘Prepping,’ ‘Ready for Delivery,’ or ‘Quality Control.’
+* **Custom Order Statuses** - Create order statuses that are custom to your business and delivery system. For example, ‘Prepping,' ‘Ready for Delivery,' or ‘Quality Control.'
 * **SMS, Email, & WhatsApp Notifications** - Based on your order statuses, send order notifications to customers, staff, or delivery drivers via email, SMS, or WhatsApp.
-* **Dietary & Promotional Product Labels** - Customize your menu with product labels that show off specific dish features. For example, ‘Vegan,’ ‘Gluten Free,’ or ‘Chef Special.’
-* **Nutritional Information** - Add a table of nutritional information to your dish’s description by filling in some easy-to-use fields.
+* **Dietary & Promotional Product Labels** - Customize your menu with product labels that show off specific dish features. For example, ‘Vegan,' ‘Gluten Free,' or ‘Chef Special.'
+* **Nutritional Information** - Add a table of nutritional information to your dish's description by filling in some easy-to-use fields.
 * **Allergen Information** - Include specific allergen information to your food items and keep customers informed.
 * **Pause/Resume Orders** - Got an emergency or run out of ingredients? You can pause or resume orders directly from the live order view screen.
 
@@ -145,7 +152,7 @@ The premium version of Orderable provides you with a whole host of revenue-boost
 
 == Installation ==
 1. Upload the Orderable zip via the \'Plugins\' menu in WordPress, or upload the Orderable folder to the /wp-content/plugins/ directory.
-2. Activate the Orderable plugin through the ‘Plugins’ menu in WordPress.
+2. Activate the Orderable plugin through the ‘Plugins' menu in WordPress.
 
 == Screenshots ==
 
@@ -170,7 +177,7 @@ Orderable will work with all major page builders. You simply create your orderin
 
 Orderable has a receipt printing feature built-in. So, all you need is a local printer (physically or wirelessly connected) to start printing tickets/receipts. No need for a 3rd-party service.
 
-This doesn’t include remote printing. You will need to have your printer in the same physical location as your device using Orderable.
+This doesn't include remote printing. You will need to have your printer in the same physical location as your device using Orderable.
 
 = Can I install Orderable on my client's websites? =
 
@@ -178,7 +185,7 @@ Yes, you certainly can, however, your client won't have direct access to our sup
 
 = What is required to use Orderable? =
 
-Orderable integrates with WordPress and uses WooCommerce for the checkout. So you will need a hosting account with WordPress and WooCommerce installed. If you don’t have WooCommerce installed, Orderable will install it for you.
+Orderable integrates with WordPress and uses WooCommerce for the checkout. So you will need a hosting account with WordPress and WooCommerce installed. If you don't have WooCommerce installed, Orderable will install it for you.
 = What payment gateways does Orderable support? =
 
 This is where Orderable is a solution for everyone. Any payment gateway for WooCommerce will work with Orderable.
@@ -200,6 +207,16 @@ Great question. While we haven't tested every WordPress theme, Orderable was des
 Glad you asked! [Orderable Pro](https://orderable.com/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) is an optional add-on to Orderable that adds additional revenue increasing features.
 
 == Changelog ==
+**v1.20.0** (13 Jan 2026)
+[new] Allow receiving orders only within store Open Hours  
+
+**v1.19.2** (30 Dec 2025)
+[new] Dev filter: `orderable_live_view_last_order_id_query_args`
+[fix] Live Order View not showing the latest order when placing an order via the Checkout block
+
+**v1.19.1** (11 Nov 2025)
+[update] Settings page
+
 **v1.19.0** (25 Jun 2025)
 [new] Welcome Guide to the Receipt Layouts
 [new] Preview button on the Receipt Layouts

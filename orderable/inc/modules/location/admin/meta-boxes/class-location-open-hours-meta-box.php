@@ -62,9 +62,11 @@ class Orderable_Location_Open_Hours_Meta_Box {
 		$data = array(
 			'orderable_override_open_hours' => $location->get_override_default_open_hours(),
 			'store_general_open_hours'      => $location->get_open_hours(),
+			'orderable_enable_placing_orders_only_within_open_hours' => $location->get_enable_placing_orders_only_within_open_hours(),
 		);
 
-		$override_open_hours = (bool) $data['orderable_override_open_hours'] || ( is_admin() && ! $should_show_override_open_hours_field );
+		$override_open_hours                          = (bool) $data['orderable_override_open_hours'] || ( is_admin() && ! $should_show_override_open_hours_field );
+		$enable_placing_orders_only_within_open_hours = $data['orderable_enable_placing_orders_only_within_open_hours'];
 
 		$class_toggle_field_value = $override_open_hours ? 'enabled' : 'disabled';
 
@@ -171,6 +173,31 @@ class Orderable_Location_Open_Hours_Meta_Box {
 						<p class='orderable-field-error-message'></p>
 					</div>
 				</div>
+
+				<div class="orderable-fields-row__body-row orderable-store-open-hours__placing-orders-only_within-open-hours">
+					<div class="orderable-fields-row__body-row-left">
+						<h3><?php echo esc_html_x( 'Restrict Orders to Open Hours', 'Open Hours', 'orderable' ); ?></h3>
+						<p>
+							<?php echo esc_html_x( 'Only allow orders during your opening hours. Customers attempting to order outside these times will see a message at checkout showing when you reopen.', 'Open Hours', 'orderable' ); ?>
+						</p>
+					</div>
+					<div class="orderable-fields-row__body-row-right">
+						<div class="orderable-store-open-hours__enable-placing_orders_only_within_open_hours">
+							<span
+								class="orderable-toggle-field orderable-enable-placing_orders_only_within_open_hours-toggle-field woocommerce-input-toggle woocommerce-input-toggle--<?php echo $enable_placing_orders_only_within_open_hours ? esc_attr( 'enabled' ) : esc_attr( 'disabled' ); ?>"
+							>
+								<?php echo esc_html( 'Yes' ); ?>
+							</span>
+
+							<input
+								type="hidden"
+								name="orderable_location_enable_placing_orders_only_within_open_hours"
+								value="<?php echo esc_attr( $enable_placing_orders_only_within_open_hours ? 'yes' : 'no' ); ?>"
+								class="orderable-toggle-field__input"
+							/>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<?php
@@ -214,6 +241,7 @@ class Orderable_Location_Open_Hours_Meta_Box {
 
 		$default_data = array(
 			'orderable_override_open_hours' => 'no',
+			'orderable_enable_placing_orders_only_within_open_hours' => 'no',
 			'store_general_open_hours'      => array(),
 		);
 
@@ -233,6 +261,7 @@ class Orderable_Location_Open_Hours_Meta_Box {
 
 		$store_open_hours_data = array(
 			'orderable_override_open_hours' => Orderable_Location_Admin::get_posted_value( 'orderable_override_open_hours' ),
+			'orderable_enable_placing_orders_only_within_open_hours' => Orderable_Location_Admin::get_posted_value( 'orderable_enable_placing_orders_only_within_open_hours' ),
 			'store_general_open_hours'      => self::get_location_open_hours(),
 		);
 
@@ -402,8 +431,9 @@ class Orderable_Location_Open_Hours_Meta_Box {
 		$post_id     = ! empty( $post ) ? $post->ID : null;
 		$location_id = Orderable_Location::get_location_id( $post_id );
 
-		$override_open_hours = 'yes' === Orderable_Location_Admin::get_posted_value( 'orderable_override_open_hours' );
-		$open_hours          = maybe_serialize( self::get_location_open_hours() );
+		$override_open_hours                          = 'yes' === Orderable_Location_Admin::get_posted_value( 'orderable_override_open_hours' );
+		$open_hours                                   = maybe_serialize( self::get_location_open_hours() );
+		$enable_placing_orders_only_within_open_hours = 'yes' === Orderable_Location_Admin::get_posted_value( 'orderable_location_enable_placing_orders_only_within_open_hours' );
 
 		$store_services = Orderable_Location_Store_Services_Meta_Box::get_store_services();
 
@@ -423,19 +453,20 @@ class Orderable_Location_Open_Hours_Meta_Box {
 		$enable_default_holidays = 'yes' === Orderable_Location_Admin::get_posted_value( 'orderable_location_enable_default_holidays' );
 
 		$data = array(
-			'post_id'                          => $post_id,
-			'override_default_open_hours'      => (int) $override_open_hours,
-			'open_hours'                       => $open_hours,
-			'delivery'                         => (int) $delivery,
-			'pickup'                           => (int) $pickup,
-			'pickup_hours_same_as_delivery'    => (int) $pickup_hours_same_as_delivery,
-			'asap_date'                        => (int) $asap_date,
-			'asap_time'                        => (int) $asap_time,
-			'lead_time'                        => $lead_time,
-			'lead_time_period'                 => empty( $lead_time_period ) ? 'days' : $lead_time_period,
-			'preorder'                         => $preorder,
-			'delivery_days_calculation_method' => $delivery_days_calculation_method,
-			'enable_default_holidays'          => $enable_default_holidays,
+			'post_id'                                      => $post_id,
+			'override_default_open_hours'                  => (int) $override_open_hours,
+			'open_hours'                                   => $open_hours,
+			'delivery'                                     => (int) $delivery,
+			'pickup'                                       => (int) $pickup,
+			'pickup_hours_same_as_delivery'                => (int) $pickup_hours_same_as_delivery,
+			'asap_date'                                    => (int) $asap_date,
+			'asap_time'                                    => (int) $asap_time,
+			'lead_time'                                    => $lead_time,
+			'lead_time_period'                             => empty( $lead_time_period ) ? 'days' : $lead_time_period,
+			'preorder'                                     => $preorder,
+			'delivery_days_calculation_method'             => $delivery_days_calculation_method,
+			'enable_default_holidays'                      => $enable_default_holidays,
+			'enable_placing_orders_only_within_open_hours' => (int) $enable_placing_orders_only_within_open_hours,
 		);
 
 		$store_address = array(

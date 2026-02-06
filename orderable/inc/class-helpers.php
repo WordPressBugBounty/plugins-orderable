@@ -396,7 +396,7 @@ class Orderable_Helpers {
 		$allowed_html_tags['g'] = array();
 
 		$allowed_html_tags['circle'] = array(
-			'cx' => array(),
+			'cx' =>   array(),
 			'cy' => array(),
 			'r'  => array(),
 		);

@@ -17,18 +17,19 @@ class Orderable_Location_Single {
 	 * @var array
 	 */
 	public $location_data = array(
-		'location_id'                   => 0,
-		'override_default_open_hours'   => false,
-		'asap_date'                     => '',
-		'asap_time'                     => '',
-		'address_line_1'                => '',
-		'address_line_2'                => '',
-		'city'                          => '',
-		'country_state'                 => '',
-		'postcode_zip'                  => '',
-		'open_hours'                    => array(),
-		'enable_default_holidays'       => true,
-		'pickup_hours_same_as_delivery' => true,
+		'location_id'                                  => 0,
+		'override_default_open_hours'                  => false,
+		'asap_date'                                    => '',
+		'asap_time'                                    => '',
+		'address_line_1'                               => '',
+		'address_line_2'                               => '',
+		'city'                                         => '',
+		'country_state'                                => '',
+		'postcode_zip'                                 => '',
+		'open_hours'                                   => array(),
+		'enable_default_holidays'                      => true,
+		'pickup_hours_same_as_delivery'                => true,
+		'enable_placing_orders_only_within_open_hours' => false,
 	);
 
 	/**
@@ -59,6 +60,8 @@ class Orderable_Location_Single {
 		 * @since 1.13.0
 		 */
 		do_action( 'orderable_location_object_init', $this );
+
+		add_filter( 'orderable_location_service_dates', [ $this, 'on_orderable_location_service_dates' ], 20, 3 );
 	}
 
 	/**
@@ -189,6 +192,15 @@ class Orderable_Location_Single {
 	 */
 	public function get_override_default_open_hours() {
 		return ! in_array( $this->location_data['override_default_open_hours'], array( false, '0' ), true );
+	}
+
+	/**
+	 * Get enable placing order only within open hours setting.
+	 *
+	 * @return bool
+	 */
+	public function get_enable_placing_orders_only_within_open_hours() {
+		return ! in_array( $this->location_data['enable_placing_orders_only_within_open_hours'], array( false, '0' ), true );
 	}
 
 	/**
@@ -1170,5 +1182,164 @@ class Orderable_Location_Single {
 			)
 		);
 
+	}
+
+	/**
+	 * Hook on `orderable_location_service_dates` filter
+	 *
+	 * @param array|bool                $service_dates  The service dates available. If true,
+	 *                                                  the service doesn't require date/time selection.
+	 *                                                  If false, a service should be selected.
+	 * @param string                    $type           The type of service. E.g. delivery, pickup.
+	 * @param Orderable_Location_Single $location       The location instance.
+	 * @return array|bool
+	 */
+	public function on_orderable_location_service_dates( $service_dates, $type, $location ) {
+		$enable_placing_orders_only_within_open_hours = (bool) $location->location_data['enable_placing_orders_only_within_open_hours'] ?? null;
+
+		if ( ! $enable_placing_orders_only_within_open_hours ) {
+			return $service_dates;
+		}
+
+		$now = new DateTime( 'now', wp_timezone() );
+
+		if ( $this->is_within_open_hours( $now ) ) {
+			return $service_dates;
+		}
+
+		$next_open_hours = $this->get_next_available_open_hour( $now );
+
+		$store_closed_message = sprintf(
+			// translators: 1 - day of the week; 2 - hour; 3 - minute; 4 - period AM or PM
+			__( 'We\'re closed and not taking orders right now. We\'ll be taking orders again from %1$s at %2$s:%3$s %4$s', 'orderable' ),
+			$next_open_hours['day'],
+			$next_open_hours['from']['hour'],
+			$next_open_hours['from']['minute'],
+			$next_open_hours['from']['period']
+		);
+
+		/**
+		 * Filter the store closed message.
+		 *
+		 * @since 1.20.0
+		 * @hook orderable_location_store_closed_message
+		 * @param string $store_closed_message The message.
+		 * @param array|null $next_open_hours The next open hour data.
+		 * @param array|bool                 $service_dates  The service dates available. If true,
+		 *                                                   the service doesn't require date/time selection.
+		 *                                                   If false, a service should be selected.
+		 * @param string                     $type           The type of service. E.g. delivery, pickup.
+		 * @param Orderable_Location_Single  $location       The location instance.
+		 */
+		$store_closed_message = apply_filters( 'orderable_location_store_closed_message', $store_closed_message, $next_open_hours, $service_dates, $type, $location );
+
+		add_filter(
+			'woocommerce_no_shipping_available_html',
+			function( $html ) use ( $store_closed_message ) {
+				return $store_closed_message;
+			},
+			20
+		);
+		
+		add_action( 
+			'woocommerce_before_checkout_form', 
+			function() use ( $store_closed_message ) {
+				if ( ! wc_has_notice( $store_closed_message, 'notice' ) ) {
+            		wc_add_notice( $store_closed_message, 'notice' );
+        		}
+			},
+			20
+		);
+
+		return false;
+	}
+
+	/**
+	 * Check if it's within open hours.
+	 *
+	 * @param DateTime $date_time The date to check.
+	 * @return boolean
+	 */
+	protected function is_within_open_hours( DateTime $date_time ) {
+		// 0 (for Sunday) through 6 (for Saturday)
+		$numeric_day = (int) $date_time->format( 'w' );
+		$open_hours  = $this->get_open_hours();
+
+		if ( empty( $open_hours[ $numeric_day ]['enabled'] ) ) {
+			return false;
+		}
+
+		$open_from      = Orderable_Timings::convert_time_to_24_hour( $open_hours[ $numeric_day ]['from'] );
+		$open_from_date = clone $date_time;
+		$open_from_date->setTime( $open_from['hour'], $open_from['minute'] );
+
+		if ( $date_time < $open_from_date ) {
+			return false;
+		}
+
+		$open_to      = Orderable_Timings::convert_time_to_24_hour( $open_hours[ $numeric_day ]['to'] );
+		$open_to_date = clone $date_time;
+		$open_to_date->setTime( $open_to['hour'], $open_to['minute'] );
+
+		if ( $date_time >= $open_to_date ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get next available open hour
+	 *
+	 * @param DateTime $current The date time to be checked.
+	 * @return array|null
+	 */
+	protected function get_next_available_open_hour( DateTime $current ) {
+		// 0 (for Sunday) through 6 (for Saturday)
+		$numeric_day = (int) $current->format( 'w' );
+		$open_hours  = $this->get_open_hours();
+
+		// Keep only enabled days.
+		$open_hours = array_filter(
+			$open_hours,
+			function( $day_hours ) {
+				return ! empty( $day_hours['enabled'] );
+			}
+		);
+
+		if ( empty( $open_hours ) ) {
+			return null;
+		}
+
+		$days = Orderable_Timings::get_days_of_the_week();
+
+		$with_day_label = function( array $open_hour, int $day ) use ( $days, $numeric_day ) : array {
+			$open_hour['day'] = ( $day === $numeric_day )
+				? 'today'
+				: ( $days[ $day ] ?? (string) $day );
+
+			return $open_hour;
+		};
+
+		if ( isset( $open_hours[ $numeric_day ] ) && ! empty( $open_hours[ $numeric_day ]['from'] ) ) {
+			$from = Orderable_Timings::convert_time_to_24_hour( $open_hours[ $numeric_day ]['from'] );
+
+			$open_from = clone $current;
+			$open_from->setTime( (int) $from['hour'], (int) $from['minute'] );
+
+			if ( $current < $open_from ) {
+				return $with_day_label( $open_hours[ $numeric_day ], $numeric_day );
+			}
+		}
+
+		for ( $i = 1; $i <= 7; $i++ ) {
+			$day = ( $numeric_day + $i ) % 7;
+
+			if ( isset( $open_hours[ $day ] ) ) {
+				return $with_day_label( $open_hours[ $day ], $day );
+			}
+		}
+		
+		return null;
 	}
 }

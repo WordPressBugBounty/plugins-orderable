@@ -21,8 +21,9 @@ class Orderable_Database {
 		self::load_table_classes();
 
 		if ( is_admin() && ! wp_doing_ajax() ) {
-			add_action( 'orderable_after_create_custom_tables', array( __CLASS__, 'upgrades' ) );
+			add_action( 'orderable_after_create_custom_tables', array( __CLASS__, 'upgrade_1_8_0' ) );
 			self::create_tables();
+			self::upgrades();
 		}
 
 		self::append_custom_tables_to_wpdb();
@@ -151,7 +152,8 @@ class Orderable_Database {
 	 */
 	public static function upgrades() {
 		$routines = array(
-			'1.8.0' => 'upgrade_1_8_0',
+			'1.8.0'  => 'upgrade_1_8_0',
+			'1.20.0' => 'upgrade_1_20_0',
 		);
 
 		array_walk( $routines, array( __CLASS__, 'run_upgrade_routine' ) );
@@ -188,5 +190,15 @@ class Orderable_Database {
 		 * @param  string $version The upgrade version routine. E.g.: 1.8.0.
 		 */
 		do_action( 'orderable_upgrade_database_routine', '1.8.0' );
+	}
+
+	/**
+	 * Upgrade routine to v1.20.0.
+	 *
+	 * @return void
+	 */
+	public static function upgrade_1_20_0() {
+		// phpcs:ignore WooCommerce.Commenting.CommentHooks
+		do_action( 'orderable_upgrade_database_routine', '1.20.0' );
 	}
 }

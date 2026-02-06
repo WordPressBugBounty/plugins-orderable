@@ -7,6 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Automattic\WooCommerce\Blocks\Domain\Services\DraftOrders;
 use Automattic\WooCommerce\Utilities\OrderUtil;
 
 /**
@@ -148,12 +149,26 @@ class Orderable_Live_View {
 		// phpcs:ignore WordPress.Security.NonceVerification
 		$location_id = empty( $_POST['data']['orderable_location_id'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['data']['orderable_location_id'] ) );
 
-		$orders = wc_get_orders(
-			array(
-				'limit'                 => 1,
-				'orderable_location_id' => $location_id,
-			)
-		);
+		$statuses = array_filter( array_keys( wc_get_order_statuses() ), fn( $status) => DraftOrders::DB_STATUS !== $status );
+
+		$args = [
+			'limit'                 => 1,
+			'orderable_location_id' => $location_id,
+			'status'                => $statuses,
+		];
+
+		/**
+		 * Filter last order ID query args.
+		 *
+		 * @since 1.19.2
+		 * @hook orderable_live_view_last_order_id_query_args
+		 * @param  array $args The get orders query args.
+		 * @param  string $location_id The location ID. Empty for all locations.
+		 * @return array
+		 */
+		$args = apply_filters( 'orderable_live_view_last_order_id_query_args', $args, $location_id );
+
+		$orders = wc_get_orders( $args );
 
 		remove_filter(
 			'woocommerce_order_data_store_cpt_get_orders_query',

@@ -53,6 +53,7 @@ class Orderable_Location_Locations_Table {
   postcode_zip text NULL,
   override_default_open_hours boolean DEFAULT NULL,
   open_hours longtext NULL,
+  enable_placing_orders_only_within_open_hours boolean DEFAULT NULL,
   delivery boolean DEFAULT NULL,
   pickup boolean DEFAULT NULL,
   pickup_hours_same_as_delivery boolean DEFAULT NULL,
@@ -80,8 +81,17 @@ class Orderable_Location_Locations_Table {
 	 * @return void
 	 */
 	public static function upgrades( $version ) {
-		if ( '1.8.0' === $version ) {
-			self::migrate_main_location_to_custom_table();
+		switch ( true ) {
+			case '1.8.0' === $version:
+				self::migrate_main_location_to_custom_table();
+				break;
+
+			case '1.20.0' === $version:
+				self::add_enable_placing_orders_only_within_open_hours_column( $version );
+				break;
+
+			default:
+				break;
 		}
 	}
 
@@ -189,33 +199,74 @@ class Orderable_Location_Locations_Table {
 	}
 
 	/**
+	 * Add `enable_placing_orders_only_within_open_hours` column.
+	 *
+	 * @param string $version The database version.
+	 * @return void
+	 */
+	protected static function add_enable_placing_orders_only_within_open_hours_column( $version ) {
+		global $wpdb;
+
+		$table_name = $wpdb->prefix . self::get_table_name();
+
+		$table_exists = (bool) $wpdb->get_var(
+			$wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name )
+		);
+
+		if ( ! $table_exists ) {
+			return;
+		}
+
+		$column = 'enable_placing_orders_only_within_open_hours';
+
+		$column_exists = (bool) $wpdb->get_var(
+			// phpcs:ignore WordPress.DB.PreparedSQL
+			$wpdb->prepare( "SHOW COLUMNS FROM {$table_name} LIKE %s", $column )
+		);
+
+		if ( $column_exists ) {
+			return;
+		}
+
+		$result = $wpdb->query(
+			// phpcs:ignore WordPress.DB.PreparedSQL
+			$wpdb->prepare( "ALTER TABLE {$table_name} ADD {$column} boolean DEFAULT NULL AFTER open_hours" )
+		);
+
+		if ( $result ) {
+			update_option( '_orderable_db_version', $version );
+		}
+	}
+
+	/**
 	 * Get default main location data.
 	 *
 	 * @return array
 	 */
 	public static function get_default_main_location_data() {
 		$data = array(
-			'title'                            => __( 'Main Location', 'orderable' ),
-			'address_line_1'                   => get_option( 'woocommerce_store_address', '' ),
-			'address_line_2'                   => get_option( 'woocommerce_store_address_2', '' ),
-			'city'                             => get_option( 'woocommerce_store_city', '' ),
-			'country_state'                    => get_option( 'woocommerce_default_country', '' ),
-			'postcode_zip'                     => get_option( 'woocommerce_store_postcode', '' ),
-			'override_default_open_hours'      => (int) true,
-			'enable_default_holidays'          => (int) true,
-			'open_hours'                       => '',
-			'delivery'                         => (int) false,
-			'pickup'                           => (int) false,
-			'pickup_hours_same_as_delivery'    => '',
-			'asap_date'                        => (int) false,
-			'asap_time'                        => (int) false,
-			'lead_time'                        => '',
-			'lead_time_period'                 => 'days',
-			'preorder'                         => '',
-			'delivery_days_calculation_method' => '',
-			'is_main_location'                 => 1,
-			'image_id'                         => null,
-			'menu_order'                       => null,
+			'title'                                        => __( 'Main Location', 'orderable' ),
+			'address_line_1'                               => get_option( 'woocommerce_store_address', '' ),
+			'address_line_2'                               => get_option( 'woocommerce_store_address_2', '' ),
+			'city'                                         => get_option( 'woocommerce_store_city', '' ),
+			'country_state'                                => get_option( 'woocommerce_default_country', '' ),
+			'postcode_zip'                                 => get_option( 'woocommerce_store_postcode', '' ),
+			'override_default_open_hours'                  => (int) true,
+			'enable_default_holidays'                      => (int) true,
+			'open_hours'                                   => '',
+			'delivery'                                     => (int) false,
+			'pickup'                                       => (int) false,
+			'pickup_hours_same_as_delivery'                => '',
+			'asap_date'                                    => (int) false,
+			'asap_time'                                    => (int) false,
+			'lead_time'                                    => '',
+			'lead_time_period'                             => 'days',
+			'preorder'                                     => '',
+			'delivery_days_calculation_method'             => '',
+			'is_main_location'                             => 1,
+			'image_id'                                     => null,
+			'menu_order'                                   => null,
+			'enable_placing_orders_only_within_open_hours' => (int) false,
 		);
 
 		return $data;
