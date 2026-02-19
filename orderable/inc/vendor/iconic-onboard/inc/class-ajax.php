@@ -109,6 +109,12 @@ class Orderable_Onboard_Ajax {
 	 * @since  2.6.0
 	 */
 	public static function install_plugin() {
+		check_ajax_referer( 'iconic-onboard', 'security' );
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json_error();
+		}
+
 		$plugin_data = (array) filter_input( INPUT_POST, 'plugin_data', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 		if ( empty( $plugin_data ) ) {

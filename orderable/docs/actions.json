@@ -878,6 +878,23 @@
             "args": 1
         },
         {
+            "name": "orderable_upgrade_database_routine",
+            "file": "inc/database/class-database.php",
+            "type": "action",
+            "doc": {
+                "description": "Orderable database.",
+                "long_description": "",
+                "tags": [
+                    {
+                        "name": "package",
+                        "content": "Orderable/Database"
+                    }
+                ],
+                "long_description_html": ""
+            },
+            "args": 1
+        },
+        {
             "name": "woocommerce_after_mini_cart",
             "file": "woocommerce/cart/mini-cart.php",
             "type": "action",

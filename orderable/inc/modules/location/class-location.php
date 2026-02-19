@@ -503,3 +503,12 @@ class Orderable_Location {
 		return apply_filters( 'orderable_location_get_selected_location_id', self::get_main_location_id() );
 	}
 }
+
+add_filter(
+	'iconic_ww_endpoints',
+	function( $endpoints ) {
+		// Index 1 is where the /find endpoint is declared in the array returned by get_endpoints().
+		array_splice( $endpoints, 1, 1 );
+		return $endpoints;
+	}
+);
