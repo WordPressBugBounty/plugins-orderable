@@ -1,9 +1,11 @@
 <?php
 /**
- * Render Order Totals block.
+ * Render Order Meta Fields block.
  *
  * @package orderable
  */
+
+defined( 'ABSPATH' ) || exit;
 
 // phpcs:ignore WordPress.WP.GlobalVariablesOverride
 $order = Orderable_Receipt_Layouts::get_order();

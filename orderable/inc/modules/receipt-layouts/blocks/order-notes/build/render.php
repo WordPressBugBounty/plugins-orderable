@@ -5,6 +5,8 @@
  * @package orderable
  */
 
+defined( 'ABSPATH' ) || exit;
+
 // phpcs:ignore WordPress.WP.GlobalVariablesOverride
 $order = Orderable_Receipt_Layouts::get_order();
 

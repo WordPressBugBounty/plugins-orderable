@@ -94,7 +94,19 @@ class Orderable_Timings_Settings {
 		ob_start();
 		?>
 		<strong class="orderable-table__rwd-labels"><?php esc_html_e( 'Max Orders (Day)', 'orderable' ); ?></strong>
-		<?php echo Orderable_Helpers::get_pro_button( 'max-orders' ); ?>
+		<?php
+		echo wp_kses(
+			Orderable_Helpers::get_pro_button( 'max-orders' ),
+			array(
+				'a'    => array(
+					'href'   => true,
+					'class'  => true,
+					'target' => true,
+				),
+				'span' => array( 'class' => true ),
+			)
+		);
+		?>
 		<?php
 
 		return apply_filters( 'orderable_get_max_orders_field', ob_get_clean(), $name, $settings );
@@ -120,7 +132,19 @@ class Orderable_Timings_Settings {
 		>
 			<th class="orderable-table__column orderable-table__column--medium"><?php esc_html_e( 'Hours', 'orderable' ); ?></th>
 			<td class="orderable-table__column orderable-table__column--time" rowspan="4" style="text-align: center;">
-				<?php echo Orderable_Helpers::get_pro_button( 'time-slots' ); ?>
+				<?php
+				echo wp_kses(
+					Orderable_Helpers::get_pro_button( 'time-slots' ),
+					array(
+						'a'    => array(
+							'href'   => true,
+							'class'  => true,
+							'target' => true,
+						),
+						'span' => array( 'class' => true ),
+					)
+				);
+				?>
 			</td>
 		</tr>
 		<tr data-orderable-period="time-slots" 

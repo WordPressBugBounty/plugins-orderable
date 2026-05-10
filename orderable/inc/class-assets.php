@@ -46,6 +46,7 @@ class Orderable_Assets {
 					'no_exist'     => __( 'Sorry, that combination does not exist.', 'orderable' ),
 				),
 				'ajax_url'                            => WC()->ajax_url(),
+				'nonce'                               => wp_create_nonce( 'orderable_ajax' ),
 				/**
 				 * If the option "Enable AJAX add to cart buttons on archives" is not enabled,
 				 * we need to turn off the click event for .add_to_cart_button elements on drawer.js
@@ -109,9 +110,10 @@ class Orderable_Assets {
 			'orderable',
 			'orderable_vars',
 			array(
-				'i18n' => array(
+				'i18n'  => array(
 					'confirm_remove_service_hours' => __( 'Are you sure you want to remove these service hours?', 'orderable' ),
 				),
+				'nonce' => wp_create_nonce( 'orderable_ajax' ),
 			)
 		);
 

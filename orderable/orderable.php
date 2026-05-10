@@ -1,14 +1,16 @@
 <?php
 /**
- * Plugin Name: Orderable - Local Ordering System
+ * Plugin Name: Orderable - Restaurant & Food Ordering System
  * Author URI: https://orderable.com
  * Description: Take local online ordering to a whole new level with Orderable.
- * Version: 1.20.1
+ * Version: 1.21.1
  * Author: Orderable
  * Text Domain: orderable
  * WC requires at least: 5.4.0
- * WC tested up to: 10.5.2
+ * WC tested up to: 10.7.0
  * Requires PHP: 7.4
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -20,12 +22,12 @@ class Orderable {
 	/**
 	 * @var string Plugin version.
 	 */
-	public static $version = '1.20.1';
+	public static $version = '1.21.1';
 
 	/**
 	 * @var string Required pro version.
 	 */
-	public static $required_pro_version = '1.17.0';
+	public static $required_pro_version = '1.19.0';
 
 	/**
 	 * Construct the plugin.
@@ -129,7 +131,7 @@ class Orderable {
 		?>
 		<div class="notice notice-error">
 			<p>
-				<?php _e( 'Orderable requires WooCommerce to be installed and activated.', 'orderable' ); ?>
+				<?php esc_html_e( 'Orderable requires WooCommerce to be installed and activated.', 'orderable' ); ?>
 			</p>
 		</div>
 		<?php
@@ -142,8 +144,11 @@ class Orderable {
 		?>
 		<div class="notice notice-error">
 			<p>
-				<?php printf( __( 'Orderable Pro needs to be at least v%s for compatibility. Please update the Orderable Pro plugin.', 'orderable' ), self::$required_pro_version ); ?>
-				<a href="<?php echo esc_url( admin_url( 'update-core.php' ) ); ?>"><?php _e( 'Update now', 'orderable' ); ?></a>.
+				<?php
+				/* translators: %s - the minimum required Orderable Pro version. */
+				printf( esc_html__( 'Orderable Pro needs to be at least v%s for compatibility. Please update the Orderable Pro plugin.', 'orderable' ), esc_html( self::$required_pro_version ) );
+				?>
+				<a href="<?php echo esc_url( admin_url( 'update-core.php' ) ); ?>"><?php esc_html_e( 'Update now', 'orderable' ); ?></a>.
 			</p>
 		</div>
 		<?php
@@ -199,6 +204,7 @@ class Orderable {
 		require_once ORDERABLE_INC_PATH . 'class-compat-flux-checkout.php';
 
 		Orderable_Settings::run();
+		Orderable_Admin_Notices::run();
 		Orderable_Assets::run();
 		Orderable_Modules::run();
 		Orderable_Products::run();

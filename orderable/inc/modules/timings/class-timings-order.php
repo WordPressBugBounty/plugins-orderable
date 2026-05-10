@@ -16,7 +16,6 @@ class Orderable_Timings_Order {
 	 */
 	public static function run() {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
-		add_action( 'admin_footer', array( __CLASS__, 'enqueue_daterange_script' ) );
 		add_filter( 'woocommerce_get_order_item_totals', array( __CLASS__, 'add_to_order_details' ), 10, 3 );
 		add_action( 'woocommerce_admin_order_data_after_billing_address', array( __CLASS__, 'add_to_admin_order' ), 10, 1 );
 		add_filter( 'manage_edit-shop_order_columns', array( __CLASS__, 'add_admin_order_columns' ), 20 );
@@ -42,12 +41,20 @@ class Orderable_Timings_Order {
 			return;
 		}
 
-		wp_enqueue_script( 'momentjs', ORDERABLE_ASSETS_URL . 'vendor/moment/moment.min.js', array( 'jquery' ), ORDERABLE_VERSION, true );
-		wp_enqueue_script( 'daterangepicker', ORDERABLE_ASSETS_URL . 'vendor/daterangepicker/daterangepicker.js', array( 'jquery', 'momentjs' ), ORDERABLE_VERSION, true );
+		wp_enqueue_script( 'moment' );
+		wp_enqueue_script( 'daterangepicker', ORDERABLE_ASSETS_URL . 'vendor/daterangepicker/daterangepicker.js', array( 'jquery', 'moment' ), ORDERABLE_VERSION, true );
 		wp_enqueue_style( 'daterangepicker', ORDERABLE_ASSETS_URL . 'vendor/daterangepicker/daterangepicker.css', array(), ORDERABLE_VERSION );
 
+		wp_enqueue_script(
+			'orderable-timings-daterange',
+			ORDERABLE_URL . 'inc/modules/timings/assets/admin/js/daterange.js',
+			array( 'jquery', 'daterangepicker', 'moment' ),
+			ORDERABLE_VERSION,
+			true
+		);
+
 		wp_localize_script(
-			'daterangepicker',
+			'orderable-timings-daterange',
 			'orderable_timings_daterangepicker',
 			array(
 				'today'        => esc_html__( 'Today', 'orderable' ),
@@ -57,93 +64,31 @@ class Orderable_Timings_Order {
 				'custom_range' => esc_html__( 'Custom Range', 'orderable' ),
 				'clear'        => esc_html__( 'Clear', 'orderable' ),
 				'apply'        => esc_html__( 'Apply', 'orderable' ),
+				'days_of_week' => array(
+					esc_html__( 'Su', 'orderable' ),
+					esc_html__( 'Mo', 'orderable' ),
+					esc_html__( 'Tu', 'orderable' ),
+					esc_html__( 'We', 'orderable' ),
+					esc_html__( 'Th', 'orderable' ),
+					esc_html__( 'Fr', 'orderable' ),
+					esc_html__( 'Sa', 'orderable' ),
+				),
+				'month_names'  => array(
+					esc_html__( 'January', 'orderable' ),
+					esc_html__( 'February', 'orderable' ),
+					esc_html__( 'March', 'orderable' ),
+					esc_html__( 'April', 'orderable' ),
+					esc_html__( 'May', 'orderable' ),
+					esc_html__( 'June', 'orderable' ),
+					esc_html__( 'July', 'orderable' ),
+					esc_html__( 'August', 'orderable' ),
+					esc_html__( 'September', 'orderable' ),
+					esc_html__( 'October', 'orderable' ),
+					esc_html__( 'November', 'orderable' ),
+					esc_html__( 'December', 'orderable' ),
+				),
 			)
 		);
-	}
-
-	/**
-	 * Add date range script.
-	 */
-	public static function enqueue_daterange_script() {
-		if ( ! Orderable_Orders::is_orders_page() ) {
-			return;
-		}
-		?>
-		<script>
-			var orderable_date_picker = {
-				/**
-				 * On ready.
-				 */
-				ready: function() {
-					orderable_date_picker.init();
-					orderable_date_picker.watch();
-				},
-
-				/**
-				 * Init datepicker.
-				 */
-				init: function() {
-					var ranges = {};
-					ranges[orderable_timings_daterangepicker.today] = [ moment(), moment() ];
-					ranges[orderable_timings_daterangepicker.tomorrow] = [ moment().add( 1, 'days' ), moment().add( 1, 'days' ) ];
-					ranges[orderable_timings_daterangepicker.next_7_days] = [ moment(), moment().add( 6, 'days' ) ];
-					ranges[orderable_timings_daterangepicker.next_30_days] = [ moment(), moment().add( 29, 'days' ) ];
-
-					jQuery( 'input[name="orderable_due_date"]' ).daterangepicker( {
-						opens: 'left',
-						autoUpdateInput: false,
-						alwaysShowCalendars: true,
-						locale: {
-							format: 'YYYY/MM/DD',
-							cancelLabel: orderable_timings_daterangepicker.clear,
-							applyLabel: orderable_timings_daterangepicker.apply,
-							customRangeLabel: orderable_timings_daterangepicker.custom_range,
-							daysOfWeek: [
-								'<?php esc_html_e( 'Su', 'orderable' ); ?>',
-								'<?php esc_html_e( 'Mo', 'orderable' ); ?>',
-								'<?php esc_html_e( 'Tu', 'orderable' ); ?>',
-								'<?php esc_html_e( 'We', 'orderable' ); ?>',
-								'<?php esc_html_e( 'Th', 'orderable' ); ?>',
-								'<?php esc_html_e( 'Fr', 'orderable' ); ?>',
-								'<?php esc_html_e( 'Sa', 'orderable' ); ?>',
-							],
-							monthNames: [
-								'<?php esc_html_e( 'January', 'orderable' ); ?>',
-								'<?php esc_html_e( 'February', 'orderable' ); ?>',
-								'<?php esc_html_e( 'March', 'orderable' ); ?>',
-								'<?php esc_html_e( 'April', 'orderable' ); ?>',
-								'<?php esc_html_e( 'May', 'orderable' ); ?>',
-								'<?php esc_html_e( 'June', 'orderable' ); ?>',
-								'<?php esc_html_e( 'July', 'orderable' ); ?>',
-								'<?php esc_html_e( 'August', 'orderable' ); ?>',
-								'<?php esc_html_e( 'September', 'orderable' ); ?>',
-								'<?php esc_html_e( 'October', 'orderable' ); ?>',
-								'<?php esc_html_e( 'November', 'orderable' ); ?>',
-								'<?php esc_html_e( 'December', 'orderable' ); ?>'
-							],
-						},
-						ranges: ranges,
-					} );
-				},
-
-				/**
-				 * Watch datepicker events.
-				 */
-				watch: function() {
-					jQuery( document.body ).on( 'apply.daterangepicker', 'input[name="orderable_due_date"]', function( ev, picker ) {
-						jQuery( this ).val( picker.startDate.format( 'YYYY/MM/DD' ) + ' - ' + picker.endDate.format( 'YYYY/MM/DD' ) );
-					} );
-
-					jQuery( document.body ).on( 'cancel.daterangepicker', 'input[name="orderable_due_date"]', function( ev, picker ) {
-						jQuery( this ).val( '' );
-					} );
-				}
-			};
-
-			jQuery( document ).ready( orderable_date_picker.ready );
-			jQuery( document ).on( 'orderable-live-view-updated', orderable_date_picker.init );
-		</script>
-		<?php
 	}
 
 	/**
@@ -188,7 +133,7 @@ class Orderable_Timings_Order {
 				continue;
 			}
 
-			echo '<p><strong>' . $value['label'] . ':</strong> <br>' . $value['value'] . '</p>';
+			echo '<p><strong>' . esc_html( $value['label'] ) . ':</strong> <br>' . esc_html( $value['value'] ) . '</p>';
 		}
 	}
 
@@ -245,11 +190,11 @@ class Orderable_Timings_Order {
 			$data  = self::get_order_date_time( $order );
 
 			if ( ! empty( $data['order_date']['value'] ) ) {
-				printf( '<p><strong>%s</strong>: %s</p>', __( 'Date', 'orderable' ), $data['order_date']['value'] );
+				printf( '<p><strong>%s</strong>: %s</p>', esc_html__( 'Date', 'orderable' ), esc_html( $data['order_date']['value'] ) );
 			}
 
 			if ( ! empty( $data['order_time']['value'] ) ) {
-				printf( '<p><strong>%s</strong>: %s</p>', __( 'Time', 'orderable' ), $data['order_time']['value'] );
+				printf( '<p><strong>%s</strong>: %s</p>', esc_html__( 'Time', 'orderable' ), esc_html( $data['order_time']['value'] ) );
 			}
 		}
 	}

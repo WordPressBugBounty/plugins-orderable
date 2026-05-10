@@ -5,6 +5,8 @@
  * @package orderable
  */
 
+defined( 'ABSPATH' ) || exit;
+
 // phpcs:ignore WordPress.WP.GlobalVariablesOverride
 $order = Orderable_Receipt_Layouts::get_order();
 
@@ -57,7 +59,7 @@ $order_items = $order->get_items();
 
 					<?php if ( $attributes['showPrices'] ) : ?>
 						<span class="wp-block-orderable-order-line-item__subtotal">
-							<?php echo $order->get_formatted_line_subtotal( $item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php echo wp_kses_post( $order->get_formatted_line_subtotal( $item ) ); ?>
 						</span>
 					<?php endif; ?>
 				</div>

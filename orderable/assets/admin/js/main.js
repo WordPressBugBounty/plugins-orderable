@@ -268,26 +268,6 @@ jQuery(document).ready(function () {
 (function ($, document) {
   'use strict';
 
-  var orderable_pro = {
-    /**
-     * On ready.
-     */
-    on_ready() {
-      $(document.body).on('orderable-pro-modal', orderable_pro.trigger_pro_modal);
-    },
-    /**
-     * Trigger pro modal.
-     */
-    trigger_pro_modal() {
-      console.log('Pro only.');
-      tb_show('Pro Feature', '#TB_inline?inlineId=orderable-pro-modal');
-    }
-  };
-  $(document).ready(orderable_pro.on_ready);
-})(jQuery, document);
-(function ($, document) {
-  'use strict';
-
   const orderable_timings = {
     /**
      * On doc ready.

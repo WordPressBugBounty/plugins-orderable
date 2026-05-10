@@ -73,7 +73,7 @@
      * Setup mute button.
      */
     mute_button() {
-      $('.orderable-live-view-button--audio').on('click', function () {
+      $(document).on('click', '.orderable-live-view-button--audio', function () {
         const $button = $(this),
           mute_status = parseInt($button.data('orderable-mute-status')) === 1 ? 0 : 1,
           // invert status.

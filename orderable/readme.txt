@@ -1,10 +1,10 @@
-=== Orderable - WordPress Restaurant Online Ordering System and Food Ordering Plugin ===
+=== Orderable - Restaurant & Food Ordering System ===
 Contributors: orderable
 Tags: restaurant, food ordering, food menu, food delivery, restaurant menu
 Requires at least: 5.4
 Tested up to: 6.9
-Requires PHP: 5.6
-Stable tag: 1.20.1
+Requires PHP: 7.4
+Stable tag: 1.21.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,25 @@ Great question. While we haven't tested every WordPress theme, Orderable was des
 Glad you asked! [Orderable Pro](https://orderable.com/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) is an optional add-on to Orderable that adds additional revenue increasing features.
 
 == Changelog ==
+**v1.21.01** (08 May 2026)
+[update] Maintenance updates
+- Bundled dependencies refreshed.
+- General under-the-hood refactors to improve code quality in various places.
+- Minimum required Orderable Pro version is now 1.19.0
+[fix] Mute button on the Live Order View could stop responding after the order list re-rendered
+[fix] Receipt Layouts were inaccessible to Shop Manager users 
+[fix] Time slot fields supplied via the `orderable_get_time_slot_fields` filter (used by Orderable Pro) rendered without row toggling and lost placeholder/min/max/step hints due to over-aggressive HTML sanitization
+
+**v1.21.0** (24 Apr 2026)
+[update] Maintenance updates
+- Minimum PHP version is now bumped to 7.4.
+- Plugin display name: Renamed from "Orderable - Local Ordering System" to "Orderable - Restaurant & Food Ordering System". Plugin slug (orderable) is unchanged.
+- Translations: Many strings have moved from the orderable-pro, iconic-wsb, and (in 2 cases) woocommerce text domains to orderable. Custom translations supplied via Loco Translate, third-party translation plugins, or .mo overrides will need to be re-saved against the orderable domain to continue applying.
+- Asset enqueuing: Several inline styles and scripts have moved into enqueued asset files, which means a small number of additional HTTP requests on certain admin screens.
+- moment.js: Orderable now uses the version of moment.js bundled with WordPress core rather than its own copy. No behavior changes are expected.
+- Block apiVersion: checkout "order-date" block is now "apiVersion": 3.
+- Housekeeping: various small changes have been made to satisfy codebase review feedback from the WordPress.org plugins team, and our own internal review.
+
 **v1.20.1** (19 Feb 2026)
 [fix] Improved capability checks when installing dependencies
 

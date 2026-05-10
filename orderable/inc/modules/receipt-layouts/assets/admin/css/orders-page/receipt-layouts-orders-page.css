@@ -90,6 +90,15 @@
   border: 1px solid #1e3a8a !important;
 }
 
+.orderable-receipt-layouts__wrapper-print-order-button {
+  float: left;
+  margin-right: 15px;
+}
+
+.orderable-receipt-layouts__print-button-group {
+  position: relative;
+}
+
 .orderable-receipt-layouts__receipt-layout-option {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;

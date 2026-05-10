@@ -23,7 +23,7 @@ if ( empty( $args['upcoming_open_hours'] ) ) {
 				<?php echo esc_attr( $open_hour['day'] ); ?>
 			</th>
 			<td class="orderable-open-hours__hours">
-				<span class="orderable-open-hours__hours-text orderable-open-hours__hours-text--<?php echo $open_hour['is_closed'] ? 'closed' : 'open'; ?>"><?php echo $open_hour['hours']; ?></span>
+				<span class="orderable-open-hours__hours-text orderable-open-hours__hours-text--<?php echo $open_hour['is_closed'] ? 'closed' : 'open'; ?>"><?php echo esc_html( $open_hour['hours'] ); ?></span>
 
 				<?php if ( $args['services'] && ! empty( $open_hour['services'] ) && ! $open_hour['is_closed'] ) { ?>
 					<?php foreach ( $open_hour['services'] as $service => $active ) { ?>

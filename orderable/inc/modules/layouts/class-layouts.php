@@ -181,6 +181,20 @@ class Orderable_Layouts {
 			return;
 		}
 
+		if ( 'orderable_layouts' !== get_post_type( $post_id ) ) {
+			return;
+		}
+
+		$nonce = isset( $_POST['orderable_layout_settings_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['orderable_layout_settings_nonce'] ) ) : '';
+
+		if ( ! wp_verify_nonce( $nonce, 'orderable_layout_settings_save' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
 		/**
 		 * Filter the layout settings before saving.
 		 *
@@ -189,16 +203,18 @@ class Orderable_Layouts {
 		 * @param  array $layout_settings The product layout settings.
 		 * @return array New value
 		 */
+		$raw_categories = (array) filter_input( INPUT_POST, 'orderable_categories', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );
+
 		$layout_settings = apply_filters(
 			'orderable_layout_settings_save_data',
 			array(
-				'categories'       => (array) filter_input( INPUT_POST, 'orderable_categories', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ),
-				'layout'           => empty( $_POST['orderable_layout'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['orderable_layout'] ) ), // phpcs:ignore WordPress.Security.NonceVerification
-				'images'           => empty( $_POST['orderable_images'] ) ? false : 'yes' === sanitize_text_field( wp_unslash( $_POST['orderable_images'] ) ), // phpcs:ignore WordPress.Security.NonceVerification
-				'card_click'       => empty( $_POST['orderable_card_click'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['orderable_card_click'] ) ), // phpcs:ignore WordPress.Security.NonceVerification
-				'quantity_roller'  => 'yes' === sanitize_text_field( filter_input( INPUT_POST, 'orderable_quantity_roller' ) ),
-				'sort'             => empty( $_POST['orderable_sort'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['orderable_sort'] ) ), // phpcs:ignore WordPress.Security.NonceVerification
-				'sort_on_frontend' => empty( $_POST['orderable_sort_on_frontend'] ) ? false : 'yes' === sanitize_text_field( wp_unslash( $_POST['orderable_sort_on_frontend'] ) ), // phpcs:ignore WordPress.Security.NonceVerification
+				'categories'       => array_map( 'absint', $raw_categories ),
+				'layout'           => empty( $_POST['orderable_layout'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['orderable_layout'] ) ),
+				'images'           => empty( $_POST['orderable_images'] ) ? false : 'yes' === sanitize_text_field( wp_unslash( $_POST['orderable_images'] ) ),
+				'card_click'       => empty( $_POST['orderable_card_click'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['orderable_card_click'] ) ),
+				'quantity_roller'  => 'yes' === sanitize_text_field( (string) filter_input( INPUT_POST, 'orderable_quantity_roller', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) ),
+				'sort'             => empty( $_POST['orderable_sort'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['orderable_sort'] ) ),
+				'sort_on_frontend' => empty( $_POST['orderable_sort_on_frontend'] ) ? false : 'yes' === sanitize_text_field( wp_unslash( $_POST['orderable_sort_on_frontend'] ) ),
 			)
 		);
 
@@ -214,6 +230,8 @@ class Orderable_Layouts {
 	 */
 	public static function render_layout_settings_metabox( $post ) {
 		$layout_settings = self::get_layout_settings( $post );
+
+		wp_nonce_field( 'orderable_layout_settings_save', 'orderable_layout_settings_nonce' );
 
 		include Orderable_Helpers::get_template_path( 'admin/layout-settings-metabox.php', 'layouts' );
 	}
@@ -271,12 +289,10 @@ class Orderable_Layouts {
 	public static function render_layout_preview_metabox( $post ) {
 		?>
 		<div class="orderable-layout-preview-notice">
-			<p><?php _e( 'This preview is for demo purposes and is not interactive.', 'orderable' ); ?></p>
+			<p><?php esc_html_e( 'This preview is for demo purposes and is not interactive.', 'orderable' ); ?></p>
 		</div>
 		<div class="orderable-main-wrap">
-			<?php
-			echo do_shortcode( sprintf( '[orderable id="%d"]', $post->ID ) );
-			?>
+			<?php echo wp_kses( do_shortcode( sprintf( '[orderable id="%d"]', (int) $post->ID ) ), Orderable_Helpers::kses_allowed_html( 'frontend' ) ); ?>
 		</div>
 		<?php
 	}
@@ -285,11 +301,19 @@ class Orderable_Layouts {
 	 * Render layout from ajax data.
 	 */
 	public static function render_layout_preview_ajax() {
-		$data = (array) filter_input( INPUT_POST, 'data', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		check_ajax_referer( 'orderable_ajax', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( null, 403 );
+		}
+
+		$data = (array) filter_input( INPUT_POST, 'data', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY );
 
 		if ( empty( $data ) ) {
 			wp_send_json_error();
 		}
+
+		$data = map_deep( $data, 'sanitize_text_field' );
 
 		$return = array(
 			'shortcode' => self::orderable_shortcode( $data ),
@@ -408,6 +432,14 @@ class Orderable_Layouts {
 		// Scripts.
 		wp_enqueue_script( 'thickbox' );
 		wp_enqueue_script( 'orderable-layouts', ORDERABLE_URL . 'inc/modules/layouts/assets/admin/js/main' . $suffix . '.js', array( 'jquery', 'thickbox' ), ORDERABLE_VERSION, true );
+
+		wp_localize_script(
+			'orderable-layouts',
+			'orderable_layouts_vars',
+			array(
+				'nonce' => wp_create_nonce( 'orderable_ajax' ),
+			)
+		);
 	}
 
 	/**

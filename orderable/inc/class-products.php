@@ -893,13 +893,16 @@ class Orderable_Products {
 	 * @return array
 	 */
 	public static function handle_adding_product_without_side_drawer( $fragments ) {
-		// phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! check_ajax_referer( 'orderable_ajax', 'nonce', false ) ) {
+			return $fragments;
+		}
+
 		if ( empty( $_POST['action'] ) || empty( $_POST['product_id'] ) ) {
 			return $fragments;
 		}
 
-		$action     = sanitize_text_field( wp_unslash( $_POST['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$product_id = absint( sanitize_text_field( wp_unslash( $_POST['product_id'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$action     = sanitize_text_field( wp_unslash( $_POST['action'] ) );
+		$product_id = absint( sanitize_text_field( wp_unslash( $_POST['product_id'] ) ) );
 
 		switch ( $action ) {
 			case 'orderable_add_to_cart':
@@ -925,12 +928,11 @@ class Orderable_Products {
 				break;
 
 			case 'orderable_cart_quantity':
-				// phpcs:ignore WordPress.Security.NonceVerification
 				if ( empty( $_POST['cart_item_key'] ) || ! isset( $_POST['quantity'] ) ) {
 					return $fragments;
 				}
 
-				$cart_item_key = sanitize_text_field( wp_unslash( $_POST['cart_item_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+				$cart_item_key = sanitize_text_field( wp_unslash( $_POST['cart_item_key'] ) );
 
 				if ( empty( $cart_item_key ) ) {
 					return $fragments;
@@ -1020,7 +1022,6 @@ class Orderable_Products {
 			<span
 				class="orderable-product__actions-counter"
 				data-orderable-product-quantity="<?php echo esc_attr( $quantity ); ?>"
-				style="animation: wobble-hor-bottom .8s both;"
 			>
 				<?php echo esc_html( $quantity ); ?>
 			</span>

@@ -17,11 +17,11 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="orderable-drawer">
-	<button class="orderable-drawer__close" data-orderable-trigger="drawer.close"><?php _e( 'Close', 'orderable' ); ?></button>
+	<button class="orderable-drawer__close" data-orderable-trigger="drawer.close"><?php esc_html_e( 'Close', 'orderable' ); ?></button>
 
 	<div class="orderable-drawer__inner orderable-drawer__html"></div>
 	<div class="orderable-drawer__inner orderable-drawer__cart">
-		<h3><?php _e( 'Your Order', 'orderable' ); ?></h3>
+		<h3><?php esc_html_e( 'Your Order', 'orderable' ); ?></h3>
 
 		<div class="orderable-mini-cart-wrapper">
 			<?php Orderable_Drawer::mini_cart(); ?>

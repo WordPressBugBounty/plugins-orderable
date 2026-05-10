@@ -5,6 +5,8 @@
  * @package orderable
  */
 
+defined( 'ABSPATH' ) || exit;
+
 // phpcs:ignore WordPress.WP.GlobalVariablesOverride
 $order = Orderable_Receipt_Layouts::get_order();
 
@@ -60,8 +62,11 @@ if ( class_exists( 'Orderable_Timings_Pro_Checkout' ) ) {
 <?php if ( $attributes['showDate'] ?? true ) : ?>
 	<div <?php echo wp_kses_data( Orderable_Receipt_Layouts::get_receipt_block_wrapper_attributes() ); ?>>
 		<?php
-			// translators: %1$s - date.
-			printf( __( '<span class="wp-block-orderable-receipt-layouts__label">%1$s</span> %2$s', 'orderable' ), esc_html( $service_date_label ), esc_html( $order_service_date ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf(
+				'<span class="wp-block-orderable-receipt-layouts__label">%1$s</span> %2$s',
+				esc_html( $service_date_label ),
+				esc_html( $order_service_date )
+			);
 		?>
 	</div>
 <?php endif; ?>
@@ -69,8 +74,11 @@ if ( class_exists( 'Orderable_Timings_Pro_Checkout' ) ) {
 <?php if ( $order_service_time && ( $attributes['showTime'] ?? true ) ) : ?>
 	<div <?php echo wp_kses_data( Orderable_Receipt_Layouts::get_receipt_block_wrapper_attributes() ); ?>>
 		<?php
-			// translators: %1$s - time
-			printf( __( '<span class="wp-block-orderable-receipt-layouts__label">%1$s</span> %2$s', 'orderable' ), esc_html( $service_time_label ), esc_html( $order_service_time ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			printf(
+				'<span class="wp-block-orderable-receipt-layouts__label">%1$s</span> %2$s',
+				esc_html( $service_time_label ),
+				esc_html( $order_service_time )
+			);
 		?>
 	</div>
 <?php endif; ?>

@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Compatiblity with Flux Checkout for WooCommerce plugin.
  *

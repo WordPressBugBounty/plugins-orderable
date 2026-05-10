@@ -71,9 +71,9 @@ class Orderable_Location_Order_Options_Meta_Box {
 			<div class="orderable-fields-row__body">
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'As Soon As Possible', 'Order Options', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'As Soon As Possible', 'Order Options', 'orderable' ); ?></h3>
 						<p>
-							<?php echo esc_html__( 'Allow customers to request delivery "ASAP".', 'orderable-pro' ); ?>
+							<?php echo esc_html__( 'Allow customers to request delivery "ASAP".', 'orderable' ); ?>
 						</p>
 					</div>
 					<div class="orderable-fields-row__body-row-right orderable-order-options__as-soon-as-possible">
@@ -81,7 +81,7 @@ class Orderable_Location_Order_Options_Meta_Box {
 							<span
 								class="<?php echo esc_attr( $asap_delivery_date_toggle_class ); ?>"
 							>
-								<?php echo esc_html( 'On delivery date' ); ?>
+								<?php echo esc_html__( 'On delivery date', 'orderable' ); ?>
 							</span>
 
 							<input
@@ -93,10 +93,10 @@ class Orderable_Location_Order_Options_Meta_Box {
 
 							<span class="orderable-toggle-field__label-wrapper">
 								<span class="orderable-toggle-field__label">
-									<?php echo esc_html__( 'On delivery date' ); ?>
+									<?php echo esc_html__( 'On delivery date', 'orderable' ); ?>
 								</span>
 								<span class="orderable-toggle-field__label-help">
-									<?php echo esc_html__( 'Allow "ASAP" as an option when choosing delivery date' ); ?>
+									<?php echo esc_html__( 'Allow "ASAP" as an option when choosing delivery date', 'orderable' ); ?>
 								</span>
 							</span>
 						</div>
@@ -115,9 +115,9 @@ class Orderable_Location_Order_Options_Meta_Box {
 
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Lead Time', 'Order Options', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Lead Time', 'Order Options', 'orderable' ); ?></h3>
 						<p>
-							<?php echo esc_html__( 'How long do you need to prepare the order? Leave blank or "0" for same day.', 'orderable-pro' ); ?>
+							<?php echo esc_html__( 'How long do you need to prepare the order? Leave blank or "0" for same day.', 'orderable' ); ?>
 						</p>
 					</div>
 					<div class="orderable-fields-row__body-row-right">
@@ -136,9 +136,9 @@ class Orderable_Location_Order_Options_Meta_Box {
 
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Preorder Days', 'Order Options', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Preorder Days', 'Order Options', 'orderable' ); ?></h3>
 						<p>
-							<?php echo esc_html__( 'How many days do you want to offer delivery/pickup? Leave blank or "0" for same day. This setting should be at least the same as, or higher than, "Lead Time".', 'orderable-pro' ); ?>
+							<?php echo esc_html__( 'How many days do you want to offer delivery/pickup? Leave blank or "0" for same day. This setting should be at least the same as, or higher than, "Lead Time".', 'orderable' ); ?>
 						</p>
 					</div>
 					<div class="orderable-fields-row__body-row-right">
@@ -155,30 +155,30 @@ class Orderable_Location_Order_Options_Meta_Box {
 
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Delivery Days Calculation Method', 'Order Options', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Delivery Days Calculation Method', 'Order Options', 'orderable' ); ?></h3>
 						<p>
-							<?php echo esc_html__( 'Calculate Lead time and Preorder Days based on all days of the week, open days, service days or weekdays.', 'orderable-pro' ); ?>
+							<?php echo esc_html__( 'Calculate Lead time and Preorder Days based on all days of the week, open days, service days or weekdays.', 'orderable' ); ?>
 						</p>
 						<br />
 						<p>
 							<a href="https://orderable.com/docs/how-to-set-your-order-lead-time/#change-how-lead-time-and-preorder-days-are-calculated" target="_blank">
-								<?php echo esc_html( 'See documentation' ); ?>
+								<?php echo esc_html__( 'See documentation', 'orderable' ); ?>
 							</a>
 						</p>
 					</div>
 					<div class="orderable-fields-row__body-row-right">
 						<select name="orderable_location_delivery_days_calculation_method">
 							<option value="service" <?php selected( $delivery_days_calculation_method, 'service' ); ?>>
-								<?php echo esc_html__( 'Service Days', 'orderable-pro' ); ?>
+								<?php echo esc_html__( 'Service Days', 'orderable' ); ?>
 							</option>
 							<option value="open" <?php selected( $delivery_days_calculation_method, 'open' ); ?>>
-								<?php echo esc_html__( 'Open Days', 'orderable-pro' ); ?>
+								<?php echo esc_html__( 'Open Days', 'orderable' ); ?>
 							</option>
 							<option value="weekdays" <?php selected( $delivery_days_calculation_method, 'weekdays' ); ?>>
-								<?php echo esc_html__( 'Weekdays Only', 'orderable-pro' ); ?>
+								<?php echo esc_html__( 'Weekdays Only', 'orderable' ); ?>
 							</option>
 							<option value="all" <?php selected( $delivery_days_calculation_method, 'all' ); ?>>
-								<?php echo esc_html__( 'All Days', 'orderable-pro' ); ?>
+								<?php echo esc_html__( 'All Days', 'orderable' ); ?>
 							</option>
 						</select>
 					</div>

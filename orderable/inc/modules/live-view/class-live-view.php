@@ -19,9 +19,9 @@ class Orderable_Live_View {
 	 */
 	public static function run() {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_button_assets' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'remove_filters' ) );
 		add_filter( 'heartbeat_received', array( __CLASS__, 'heartbeat_received' ), 10, 2 );
-		add_action( 'admin_footer', array( __CLASS__, 'add_live_view_button' ), 100 );
 		add_action( 'admin_footer', array( __CLASS__, 'embed_ding' ) );
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'output_filter_orders_nonce_field' ), 50 );
 		add_action( 'restrict_manage_posts', array( __CLASS__, 'live_view_input' ), 60 );
@@ -227,39 +227,58 @@ class Orderable_Live_View {
 	/**
 	 * Add live_view button.
 	 */
-	public static function add_live_view_button() {
+	public static function enqueue_button_assets() {
 		if ( ! function_exists( 'get_current_screen' ) ) {
 			return;
 		}
 
-		$screen                    = get_current_screen();
+		$screen = get_current_screen();
+
+		if ( empty( $screen ) ) {
+			return;
+		}
+
 		$shop_order_page_screen_id = OrderUtil::custom_orders_table_usage_is_enabled() ? wc_get_page_screen_id( 'shop-order' ) : 'edit-shop_order';
 
 		if ( $shop_order_page_screen_id !== $screen->id ) {
 			return;
 		}
 
-		$enable_button  = sprintf( '<a href="%s" class="page-title-action orderable-live-view-button orderable-live-view-button--enable">%s</a>', admin_url( 'edit.php?post_type=shop_order&orderable_live_view' ), __( 'Enable Live View', 'orderable' ) );
+		wp_enqueue_script(
+			'orderable-live-view-button',
+			ORDERABLE_URL . 'inc/modules/live-view/assets/admin/js/button.js',
+			array( 'jquery' ),
+			ORDERABLE_VERSION,
+			true
+		);
+
+		$enable_button  = sprintf( '<a href="%s" class="page-title-action orderable-live-view-button orderable-live-view-button--enable">%s</a>', esc_url( admin_url( 'edit.php?post_type=shop_order&orderable_live_view' ) ), esc_html__( 'Enable Live View', 'orderable' ) );
 		$disable_button = '';
 		$enable_audio   = '';
 
 		if ( self::is_live_view() ) {
-			$disable_button = sprintf( '<a href="%s" class="page-title-action orderable-live-view-button orderable-live-view-button--disable orderable-live-view-button--margin-left-6">%s</a>', admin_url( 'edit.php?post_type=shop_order' ), __( 'Exit Live View', 'orderable' ) );
-			$enable_audio   = sprintf( '<button class="page-title-action orderable-live-view-button orderable-live-view-button--audio orderable-live-view-button--margin-left-6" data-orderable-alt-text="%1$s" data-orderable-mute-status="0">%2$s</a>', __( 'Unmute', 'orderable' ), __( 'Mute', 'orderable' ) );
+			$disable_button = sprintf( '<a href="%s" class="page-title-action orderable-live-view-button orderable-live-view-button--disable orderable-live-view-button--margin-left-6">%s</a>', esc_url( admin_url( 'edit.php?post_type=shop_order' ) ), esc_html__( 'Exit Live View', 'orderable' ) );
+			$enable_audio   = sprintf( '<button class="page-title-action orderable-live-view-button orderable-live-view-button--audio orderable-live-view-button--margin-left-6" data-orderable-alt-text="%1$s" data-orderable-mute-status="0">%2$s</button>', esc_attr__( 'Unmute', 'orderable' ), esc_html__( 'Mute', 'orderable' ) );
 		}
-		?>
-		<script>
-			jQuery( document ).ready( function() {
-				var $add_new_button = jQuery( '.page-title-action' );
 
-				if ( $add_new_button.length <= 0 ) {
-					return;
-				}
+		wp_localize_script(
+			'orderable-live-view-button',
+			'orderable_live_view_button_vars',
+			array(
+				'enable_button'  => $enable_button,
+				'disable_button' => $disable_button,
+				'enable_audio'   => $enable_audio,
+			)
+		);
+	}
 
-				$add_new_button.after( '<?php echo $enable_audio; ?>' ).after( '<?php echo $disable_button; ?>' ).after( '<?php echo $enable_button; ?>' );
-			} );
-		</script>
-		<?php
+	/**
+	 * Render the live view buttons.
+	 *
+	 * @deprecated Buttons are injected via enqueued script. Kept for backwards compatibility.
+	 */
+	public static function add_live_view_button() {
+		self::enqueue_button_assets();
 	}
 
 	/**

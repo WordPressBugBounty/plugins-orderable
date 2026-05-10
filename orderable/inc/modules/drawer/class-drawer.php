@@ -146,15 +146,17 @@ class Orderable_Drawer {
 	 * @return array
 	 */
 	public static function quantity_roller_fragments_on_updating_product( $fragments ) {
-		// phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! check_ajax_referer( 'orderable_ajax', 'nonce', false ) ) {
+			return $fragments;
+		}
+
 		if ( empty( $_POST['action'] ) || empty( $_POST['product_id'] ) ) {
 			return $fragments;
 		}
 
-		$action     = sanitize_text_field( wp_unslash( $_POST['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$product_id = absint( sanitize_text_field( wp_unslash( $_POST['product_id'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$action     = sanitize_text_field( wp_unslash( $_POST['action'] ) );
+		$product_id = absint( sanitize_text_field( wp_unslash( $_POST['product_id'] ) ) );
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'orderable_update_cart_item_options' !== $action || empty( $product_id ) ) {
 			return $fragments;
 		}

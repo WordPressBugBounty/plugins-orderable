@@ -109,6 +109,7 @@
       const quantity = parseInt(quantityElement.text());
       const data = {
         action: 'orderable_cart_quantity',
+        nonce: orderable_vars.nonce,
         cart_item_key,
         product_id,
         quantity
@@ -257,6 +258,7 @@
         const $quantityElement = $button.siblings('.orderable-quantity-roller__quantity');
         const data = {
           action: 'orderable_cart_quantity',
+          nonce: orderable_vars.nonce,
           cart_item_key,
           product_id,
           quantity
@@ -491,6 +493,7 @@
       }
       let data = {
         action: 'orderable_add_to_cart',
+        nonce: orderable_vars.nonce,
         product_id: args.product_id,
         variation_id: args.variation_id || false,
         attributes: args.attributes || false
@@ -594,6 +597,7 @@
         return;
       }
       args.action = 'orderable_get_product_options';
+      args.nonce = orderable_vars.nonce;
       jQuery.post(orderable_vars.ajax_url, args, function (response) {
         if (!response.success) {
           return;
@@ -614,6 +618,7 @@
         return;
       }
       args.action = 'orderable_get_cart_item_options';
+      args.nonce = orderable_vars.nonce;
       jQuery.post(orderable_vars.ajax_url, args, function (response) {
         if (!response.success) {
           return;
@@ -634,6 +639,7 @@
         return;
       }
       args.action = 'orderable_update_cart_item_options';
+      args.nonce = orderable_vars.nonce;
 
       // Prepare addons data.
       if ($('.orderable-product-fields-group').length) {

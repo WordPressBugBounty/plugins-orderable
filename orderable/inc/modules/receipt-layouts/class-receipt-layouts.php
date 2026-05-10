@@ -40,8 +40,8 @@ class Orderable_Receipt_Layouts {
 		add_action( 'current_screen', [ __CLASS__, 'register_block_patterns' ], 15 );
 		add_action( 'admin_action_duplicate_' . self::$post_type_key, [ __CLASS__, 'handle_duplicate_action' ], 10 );
 		add_action( 'current_screen', [ __CLASS__, 'update_theme_support' ] );
-		add_action( 'admin_print_footer_scripts-woocommerce_page_wc-orders', [ __CLASS__, 'add_print_order_buttons_to_hpos_edit_order_page' ] );
-		add_action( 'admin_print_footer_scripts-post.php', [ __CLASS__, 'add_print_order_buttons_to_edit_order_page' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'add_print_order_buttons_to_hpos_edit_order_page' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'add_print_order_buttons_to_edit_order_page' ] );
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_assets_to_orders_page' ] );
 		add_action( 'admin_print_styles', [ __CLASS__, 'output_custom_block_editor_style' ], 50 );
 
@@ -193,7 +193,10 @@ class Orderable_Receipt_Layouts {
 					content="<?php bloginfo( 'html_type' ); ?>; charset=<?php echo esc_attr( get_option( 'blog_charset' ) ); ?>"
 				/>
 				<style>
-					<?php echo $data['css']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS context: HTML escaping would break valid selectors. wp_strip_all_tags prevents </style> injection from the filter above.
+					echo wp_strip_all_tags( $data['css'] );
+					?>
 				</style>
 
 				<script>
@@ -212,7 +215,7 @@ class Orderable_Receipt_Layouts {
 					 */
 					do_action( 'orderable_receipt_layouts_before_template_content', $order );
 
-					echo $data['content']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo wp_kses_post( $data['content'] );
 
 					/**
 					 * Fires after receipt layout content.
@@ -305,13 +308,14 @@ class Orderable_Receipt_Layouts {
 	 * @return int|null
 	 */
 	protected static function get_order_id_from_rest_endpoint() {
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		if ( 'POST' !== ( $_SERVER['REQUEST_METHOD'] ?? false ) ) {
+		$request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
+
+		if ( 'POST' !== $request_method ) {
 			return null;
 		}
 
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		parse_str( $_SERVER['QUERY_STRING'] ?? '', $request_query_string );
+		$query_string = isset( $_SERVER['QUERY_STRING'] ) ? sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ) : '';
+		parse_str( $query_string, $request_query_string );
 
 		if ( empty( $request_query_string['orderable_layout_id'] ) ) {
 			return null;
@@ -321,8 +325,9 @@ class Orderable_Receipt_Layouts {
 		 * Try to catch a pattern like `/wc/v3/orders/1005/receipt`
 		 * to make sure we are intercepting the correct endpoint
 		 */
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		if ( 1 !== preg_match( '#.*/wc/v3/orders/(?P<id>[\d]+)/receipt\W.*#', $_SERVER['REQUEST_URI'] ?? '', $matches ) ) {
+		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+		if ( 1 !== preg_match( '#.*/wc/v3/orders/(?P<id>[\d]+)/receipt\W.*#', $request_uri, $matches ) ) {
 			return null;
 		}
 
@@ -341,23 +346,24 @@ class Orderable_Receipt_Layouts {
 	 * @return int|null
 	 */
 	protected static function get_order_id_from_ajax() {
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			return null;
+		}
+
 		$allowed_actions = [
 			'woocommerce_get_order_details',
 		];
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		if ( empty( $_GET['action'] ) || empty( $_GET['order_id'] ) ) {
 			return null;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		$action = sanitize_text_field( wp_unslash( $_GET['action'] ) );
 
 		if ( ! in_array( $action, $allowed_actions, true ) ) {
 			return null;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		$order_id = sanitize_text_field( wp_unslash( $_GET['order_id'] ) );
 
 		if ( empty( $order_id ) ) {
@@ -391,19 +397,20 @@ class Orderable_Receipt_Layouts {
 			return null;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			return null;
+		}
+
 		if ( empty( $_GET['action'] ) || ( empty( $_GET['id'] ) && empty( $_GET['post'] ) ) ) {
 			return null;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		$action = sanitize_text_field( wp_unslash( $_GET['action'] ) );
 
 		if ( 'edit' !== $action ) {
 			return null;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		$order_id = absint( wp_unslash( $_GET['id'] ?? $_GET['post'] ?? 0 ) );
 
 		return $order_id;
@@ -765,7 +772,7 @@ class Orderable_Receipt_Layouts {
 		$order->save_meta_data();
 
 		if ( is_null( $file_name ) ) {
-			return new WP_Error( 'woocommerce_rest_not_found', __( 'Order not found', 'woocommerce' ), [ 'status' => 404 ] );
+			return new WP_Error( 'woocommerce_rest_not_found', __( 'Order not found', 'orderable' ), [ 'status' => 404 ] );
 		}
 
 		$expiration_date = TransientFilesEngine::get_expiration_date( $file_name );
@@ -997,8 +1004,8 @@ class Orderable_Receipt_Layouts {
 			'<a href="%s" aria-label="%s" rel="permalink">%s</a>',
 			$url_to_duplicate,
 			// translators: %s - singular name of the Receipt Layout type.
-			sprintf( __( 'Make a duplicate from this %s' ), $post_type_object->labels->singular_name ),
-			__( 'Duplicate', 'iconic-wsb' )
+			sprintf( __( 'Make a duplicate from this %s', 'orderable' ), $post_type_object->labels->singular_name ),
+			__( 'Duplicate', 'orderable' )
 		);
 
 		return $actions;
@@ -1124,7 +1131,7 @@ class Orderable_Receipt_Layouts {
 
 		ob_start();
 		?>
-		<div class="orderable-receipt-layouts__wrapper-print-order-button" style="float:left;margin-right: 15px">
+		<div class="orderable-receipt-layouts__wrapper-print-order-button">
 			<?php self::output_print_order_button( $url, self::get_button_label(), $order_id ); ?>
 		</div>
 		<?php
@@ -1154,7 +1161,7 @@ class Orderable_Receipt_Layouts {
 			return;
 		}
 		?>
-		<span style="position: relative;">
+		<span class="orderable-receipt-layouts__print-button-group">
 			<a
 				href="<?php echo esc_url( $url ); ?>"
 				target="_blank"
@@ -1234,18 +1241,35 @@ class Orderable_Receipt_Layouts {
 	 * Add Print Order buttons to the edit order page (HPOS)
 	 */
 	public static function add_print_order_buttons_to_hpos_edit_order_page() {
-		if ( empty( $_GET['action'] ) || empty( $_GET['id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			return;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+
+		if ( empty( $screen ) || wc_get_page_screen_id( 'shop-order' ) !== $screen->id ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			return;
+		}
+
+		if ( empty( $_GET['action'] ) || empty( $_GET['id'] ) ) {
+			return;
+		}
+
 		$action = sanitize_text_field( wp_unslash( $_GET['action'] ) );
 
 		if ( 'edit' !== $action ) {
 			return;
 		}
 
-		$order_id = absint( wp_unslash( $_GET['id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$order_id = absint( wp_unslash( $_GET['id'] ) );
 		self::output_print_order_buttons_to_edit_order_page( $order_id );
 	}
 
@@ -1269,24 +1293,21 @@ class Orderable_Receipt_Layouts {
 
 		$print_order_button = trim( ob_get_clean() );
 
-		?>
-			<script>
-				jQuery( document ).ready( function() {
-					const $add_new_button = jQuery( '.page-title-action' ).first();
+		wp_enqueue_script(
+			'orderable-edit-order-print-button',
+			ORDERABLE_URL . 'inc/modules/receipt-layouts/assets/admin/js/edit-order-print-button.js',
+			array( 'jquery' ),
+			ORDERABLE_VERSION,
+			true
+		);
 
-					if ( $add_new_button.length ) {
-						$add_new_button.before( `<span style="position:relative; top: -3px"><?php echo $print_order_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>` );
-					}
-
-					const $add_items = jQuery('.add-items');
-
-					if ($add_items.length) {
-						$add_items.prepend(`<div style="float:left; margin-right:.25em"><?php echo $print_order_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>`);
-					}
-
-				} );
-			</script>
-		<?php
+		wp_localize_script(
+			'orderable-edit-order-print-button',
+			'orderable_print_order_button_vars',
+			array(
+				'button_html' => $print_order_button,
+			)
+		);
 	}
 
 	/**
@@ -1311,19 +1332,20 @@ class Orderable_Receipt_Layouts {
 			return;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			return;
+		}
+
 		if ( empty( $_GET['action'] ) || empty( $_GET['post'] ) ) {
 			return;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		$action = sanitize_text_field( wp_unslash( $_GET['action'] ) );
 
 		if ( 'edit' !== $action ) {
 			return;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		$order_id = absint( wp_unslash( $_GET['post'] ) );
 		self::output_print_order_buttons_to_edit_order_page( $order_id );
 	}
@@ -1632,10 +1654,10 @@ class Orderable_Receipt_Layouts {
 
 		ob_start();
 		?>
-		<div style="display: flex;">
-			<input 
-				type="number" 
-				name='orderable_settings[printing_printing_settings_default_font_size][value]' 
+		<div class="orderable-receipt-layouts__field-row">
+			<input
+				type="number"
+				name='orderable_settings[printing_printing_settings_default_font_size][value]'
 				value="<?php echo esc_attr( $font_size ); ?>"
 				min="0"
 			/>
@@ -1656,10 +1678,10 @@ class Orderable_Receipt_Layouts {
 
 		ob_start();
 		?>
-		<div style="display: flex;">
-			<input 
-				type="number" 
-				name='orderable_settings[printing_printing_settings_maximum_preview_width_field][value]' 
+		<div class="orderable-receipt-layouts__field-row">
+			<input
+				type="number"
+				name='orderable_settings[printing_printing_settings_maximum_preview_width_field][value]'
 				value="<?php echo esc_attr( $width ); ?>"
 				min="0"
 			/>

@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Title: Kitchen
  * Description: Kitchen ticket pattern

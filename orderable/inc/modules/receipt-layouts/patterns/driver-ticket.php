@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Title: Delivery Driver
  * Description: Delivery Driver ticket pattern

@@ -102,21 +102,26 @@
 		 * Setup mute button.
 		 */
 		mute_button() {
-			$( '.orderable-live-view-button--audio' ).on( 'click', function () {
-				const $button = $( this ),
-					mute_status =
-						parseInt( $button.data( 'orderable-mute-status' ) ) ===
-						1
-							? 0
-							: 1, // invert status.
-					current_text = $button.text(),
-					new_text = $button.data( 'orderable-alt-text' );
+			$( document ).on(
+				'click',
+				'.orderable-live-view-button--audio',
+				function () {
+					const $button = $( this ),
+						mute_status =
+							parseInt(
+								$button.data( 'orderable-mute-status' )
+							) === 1
+								? 0
+								: 1, // invert status.
+						current_text = $button.text(),
+						new_text = $button.data( 'orderable-alt-text' );
 
-				$button
-					.data( 'orderable-mute-status', mute_status )
-					.data( 'orderable-alt-text', current_text )
-					.text( new_text );
-			} );
+					$button
+						.data( 'orderable-mute-status', mute_status )
+						.data( 'orderable-alt-text', current_text )
+						.text( new_text );
+				}
+			);
 		},
 
 		/**

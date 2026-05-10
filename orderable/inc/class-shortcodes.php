@@ -49,10 +49,7 @@ class Orderable_Shortcodes {
 		ob_start();
 		?>
 		<div class="orderable-product__actions-button">
-			<?php
-			 	// Phpcs:ignore -- WordPress.Security.EscapeOutput.OutputNotEscaped.
-				echo Orderable_Products::get_add_to_cart_button( $product, 'orderable-product__add-to-order' );
-			?>
+			<?php echo wp_kses( Orderable_Products::get_add_to_cart_button( $product, 'orderable-product__add-to-order' ), Orderable_Helpers::kses_allowed_html( 'frontend' ) ); ?>
 		</div>
 		<?php
 

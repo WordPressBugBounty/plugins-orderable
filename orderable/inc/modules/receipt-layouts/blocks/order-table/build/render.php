@@ -5,6 +5,8 @@
  * @package orderable
  */
 
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'Orderable_Table_Ordering_Pro_Order' ) ) {
 	return;
 }

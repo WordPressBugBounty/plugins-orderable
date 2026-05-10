@@ -49,13 +49,14 @@ class Orderable_Ajax {
 	 * Get product options for a variable product.
 	 */
 	public static function get_product_options() {
+		check_ajax_referer( 'orderable_ajax', 'nonce' );
+
 		$product_id = absint( filter_input( INPUT_POST, 'product_id', FILTER_SANITIZE_NUMBER_INT ) );
 
 		if ( empty( $product_id ) ) {
 			wp_send_json_error();
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		$focus   = empty( $_POST['focus'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['focus'] ) );
 		$product = wc_get_product( $product_id );
 
@@ -88,12 +89,12 @@ class Orderable_Ajax {
 	 * Get cart item options for a variable product.
 	 */
 	public static function get_cart_item_options() {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		check_ajax_referer( 'orderable_ajax', 'nonce' );
+
 		if ( empty( $_POST['cart_item_key'] ) ) {
 			wp_send_json_error();
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$cart_item_key = sanitize_text_field( wp_unslash( $_POST['cart_item_key'] ) );
 
 		if ( empty( $cart_item_key ) ) {
@@ -199,13 +200,15 @@ class Orderable_Ajax {
 	 * AJAX add to cart.
 	 */
 	public static function add_to_cart() {
+		check_ajax_referer( 'orderable_ajax', 'nonce' );
+
 		ob_start();
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$product_id = absint( filter_input( INPUT_POST, 'product_id', FILTER_SANITIZE_NUMBER_INT ) );
 
 		if ( empty( $product_id ) ) {
-			return;
+			ob_end_clean();
+			wp_send_json_error();
 		}
 
 		$variation_id      = absint( filter_input( INPUT_POST, 'variation_id', FILTER_SANITIZE_NUMBER_INT ) );
@@ -219,8 +222,9 @@ class Orderable_Ajax {
 			do_action( 'woocommerce_ajax_added_to_cart', $product_id );
 		}
 
+		ob_end_clean();
+
 		WC_AJAX::get_refreshed_fragments();
-		// phpcs:enable
 	}
 
 	/**

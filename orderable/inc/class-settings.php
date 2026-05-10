@@ -93,7 +93,14 @@ class Orderable_Settings {
 	public static function add_settings_page() {
 		$icon = self::get_orderable_svg_icon();
 
-		add_menu_page( 'Orderable', 'Orderable', 'manage_options', 'orderable', null, $icon, 54 );
+		// Use `manage_woocommerce` for the parent menu so shop_manager can reach Receipt
+		// Layouts. WordPress' user_can_access_admin_page() falls back to the parent menu's
+		// cap for submenus whose slug does not match $pagenow exactly (e.g.
+		// `edit.php?post_type=orderable_receipt`), so a stricter parent cap would deny
+		// access regardless of each submenu's own cap. The Settings submenu still gates
+		// itself with `manage_options`. Order Manager intentionally lacks
+		// `manage_woocommerce` and so cannot edit receipt layouts.
+		add_menu_page( 'Orderable', 'Orderable', 'manage_woocommerce', 'orderable', null, $icon, 54 );
 
 		self::$settings_framework->add_settings_page(
 			array(
@@ -153,7 +160,8 @@ class Orderable_Settings {
 			'tab_id'              => 'dashboard',
 			'section_id'          => 'getting_started',
 			'section_title'       => __( 'Getting Started', 'orderable' ),
-			'section_description' => sprintf( __( 'Below you will find a playlist of useful "getting started" videos for Orderable. If you need any help getting things set up, please <a href="%s" target="_blank">reach out to our support team</a>.', 'orderable' ), 'https://my.orderable.com/support/?utm_source=orderable&utm_medium=plugin&utm_campaign=getting-started' ),
+			/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag. */
+			'section_description' => sprintf( esc_html__( 'Below you will find a playlist of useful "getting started" videos for Orderable. If you need any help getting things set up, please %1$sreach out to our support team%2$s.', 'orderable' ), '<a href="' . esc_url( 'https://my.orderable.com/support/?utm_source=orderable&utm_medium=plugin&utm_campaign=getting-started' ) . '" target="_blank">', '</a>' ),
 			'section_order'       => 0,
 			'fields'              => array(
 				'playlist' => array(
@@ -711,28 +719,34 @@ class Orderable_Settings {
 		ob_start();
 		?>
 		<div class="iconic-onboard-modal-setting__field-section">
-			<div style="margin: 0 0 8px;"><?php _e( 'From:', 'orderable' ); ?></div>
+			<div class="iconic-onboard-modal-setting__field-label"><?php esc_html_e( 'From:', 'orderable' ); ?></div>
 			<?php
-			echo Orderable_Timings_Settings::get_time_field(
-				'orderable_settings[iconic_onboard_open_hours][from]',
-				array(
-					'hour'   => 9,
-					'minute' => '00',
-					'period' => 'AM',
-				)
+			echo wp_kses(
+				Orderable_Timings_Settings::get_time_field(
+					'orderable_settings[iconic_onboard_open_hours][from]',
+					array(
+						'hour'   => 9,
+						'minute' => '00',
+						'period' => 'AM',
+					)
+				),
+				Orderable_Helpers::kses_allowed_html( 'form' )
 			);
 			?>
 		</div>
 		<div class="iconic-onboard-modal-setting__field-section">
-			<div style="margin: 0 0 8px;"><?php _e( 'To:', 'orderable' ); ?></div>
+			<div class="iconic-onboard-modal-setting__field-label"><?php esc_html_e( 'To:', 'orderable' ); ?></div>
 			<?php
-			echo Orderable_Timings_Settings::get_time_field(
-				'orderable_settings[iconic_onboard_open_hours][to]',
-				array(
-					'hour'   => 5,
-					'minute' => '00',
-					'period' => 'PM',
-				)
+			echo wp_kses(
+				Orderable_Timings_Settings::get_time_field(
+					'orderable_settings[iconic_onboard_open_hours][to]',
+					array(
+						'hour'   => 5,
+						'minute' => '00',
+						'period' => 'PM',
+					)
+				),
+				Orderable_Helpers::kses_allowed_html( 'form' )
 			);
 			?>
 		</div>
@@ -752,7 +766,7 @@ class Orderable_Settings {
 				<option value=""><?php esc_html_e( 'Default', 'orderable' ); ?></option>
 				<option value="hidden"><?php esc_html_e( 'Hidden', 'orderable' ); ?></option>
 			</select>
-			<p><?php _e( 'Choose whether to hide (on the frontend) this category archive and all single product pages within this category. Hiding them is recommended if using this category in the Orderable menu shortcode.', 'orderable' ); ?></p>
+			<p><?php esc_html_e( 'Choose whether to hide (on the frontend) this category archive and all single product pages within this category. Hiding them is recommended if using this category in the Orderable menu shortcode.', 'orderable' ); ?></p>
 		</div>
 		<?php
 	}
@@ -774,7 +788,7 @@ class Orderable_Settings {
 					<option value="" <?php selected( '', $visibility ); ?>><?php esc_html_e( 'Default', 'orderable' ); ?></option>
 					<option value="hidden" <?php selected( 'hidden', $visibility ); ?>><?php esc_html_e( 'Hidden', 'orderable' ); ?></option>
 				</select>
-				<p><?php _e( 'Choose whether to hide (on the frontend) this category archive and all single product pages within this category. Hiding them is recommended if using this category in the Orderable menu shortcode.', 'orderable' ); ?></p>
+				<p><?php esc_html_e( 'Choose whether to hide (on the frontend) this category archive and all single product pages within this category. Hiding them is recommended if using this category in the Orderable menu shortcode.', 'orderable' ); ?></p>
 			</td>
 		</tr>
 		<?php
@@ -792,7 +806,21 @@ class Orderable_Settings {
 			return;
 		}
 
-		$visibility = isset( $_POST['visibility'] ) ? sanitize_text_field( wp_unslash( $_POST['visibility'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+		$edit_nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+		$add_nonce  = isset( $_POST['_wpnonce_add-tag'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce_add-tag'] ) ) : '';
+
+		if (
+			! wp_verify_nonce( $edit_nonce, 'update-tag_' . $term_id ) &&
+			! wp_verify_nonce( $add_nonce, 'add-tag' )
+		) {
+			return;
+		}
+
+		if ( ! current_user_can( 'edit_term', $term_id ) ) {
+			return;
+		}
+
+		$visibility = isset( $_POST['visibility'] ) ? sanitize_text_field( wp_unslash( $_POST['visibility'] ) ) : '';
 
 		update_term_meta( $term_id, 'visibility', $visibility );
 	}
@@ -859,68 +887,22 @@ class Orderable_Settings {
 	 */
 	public static function settings_header() {
 		?>
-		<style>
-			.wpsf-settings__header {
-				justify-content: space-between;
-			}
-
-			.orderable-settings-header {
-				display: flex;
-				align-items: center;
-			}
-
-			.orderable-settings-header__links {
-				margin: 0 10px 0 0;
-				padding: 0;
-				list-style: none none outside;
-				height: 20px;
-			}
-
-			.orderable-settings-header__links li {
-				margin: 0 10px 0 0;
-				padding: 0;
-				display: inline-block;
-			}
-
-			.orderable-settings-header__links a {
-				text-decoration: none;
-				color: #64707B !important;
-				white-space: nowrap;
-				display: flex;
-				align-items: center;
-			}
-
-			.orderable-settings-header__links a:hover {
-				color: #7031F5 !important;
-			}
-
-			.orderable-settings-header__links a svg {
-				fill: #7031F5;
-				margin-right: 4px;
-			}
-
-			@media screen and (max-width: 648px) {
-				.orderable-settings-header__links {
-					display: none;
-				}
-			}
-		</style>
 		<div class="orderable-settings-header">
 			<ul class="orderable-settings-header__links">
 				<li><a href="https://my.orderable.com/support/?utm_source=orderable&utm_medium=plugin&utm_campaign=settings-header" target="_blank">
 						<svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px">
 							<path d="M 12 2 C 6.4889971 2 2 6.4889971 2 12 C 2 17.511003 6.4889971 22 12 22 C 17.511003 22 22 17.511003 22 12 C 22 6.4889971 17.511003 2 12 2 z M 12 4 C 16.430123 4 20 7.5698774 20 12 C 20 16.430123 16.430123 20 12 20 C 7.5698774 20 4 16.430123 4 12 C 4 7.5698774 7.5698774 4 12 4 z M 12 6 C 9.79 6 8 7.79 8 10 L 10 10 C 10 8.9 10.9 8 12 8 C 13.1 8 14 8.9 14 10 C 14 12 11 12.367 11 15 L 13 15 C 13 13.349 16 12.5 16 10 C 16 7.79 14.21 6 12 6 z M 11 16 L 11 18 L 13 18 L 13 16 L 11 16 z" />
-						</svg> <?php _e( 'Get Help', 'orderable' ); ?></a></li>
+						</svg> <?php esc_html_e( 'Get Help', 'orderable' ); ?></a></li>
 				<li><a href="https://my.orderable.com/roadmap/?utm_source=orderable&utm_medium=plugin&utm_campaign=settings-header" target="_blank">
 						<svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px">
 							<path d="M 11 0 L 11 3 L 13 3 L 13 0 L 11 0 z M 4.2226562 2.8085938 L 2.8085938 4.2226562 L 4.9296875 6.34375 L 6.34375 4.9296875 L 4.2226562 2.8085938 z M 19.777344 2.8085938 L 17.65625 4.9296875 L 19.070312 6.34375 L 21.191406 4.2226562 L 19.777344 2.8085938 z M 12 5 C 8.1456661 5 5 8.1456661 5 12 C 5 14.767788 6.6561188 17.102239 9 18.234375 L 9 21 C 9 22.093063 9.9069372 23 11 23 L 13 23 C 14.093063 23 15 22.093063 15 21 L 15 18.234375 C 17.343881 17.102239 19 14.767788 19 12 C 19 8.1456661 15.854334 5 12 5 z M 12 7 C 14.773666 7 17 9.2263339 17 12 C 17 14.184344 15.605334 16.022854 13.666016 16.708984 L 13 16.943359 L 13 21 L 11 21 L 11 16.943359 L 10.333984 16.708984 C 8.3946664 16.022854 7 14.184344 7 12 C 7 9.2263339 9.2263339 7 12 7 z M 0 11 L 0 13 L 3 13 L 3 11 L 0 11 z M 21 11 L 21 13 L 24 13 L 24 11 L 21 11 z M 4.9296875 17.65625 L 2.8085938 19.777344 L 4.2226562 21.191406 L 6.34375 19.070312 L 4.9296875 17.65625 z M 19.070312 17.65625 L 17.65625 19.070312 L 19.777344 21.191406 L 21.191406 19.777344 L 19.070312 17.65625 z" />
-						</svg> <?php _e( 'Request Feature', 'orderable' ); ?></a></li>
+						</svg> <?php esc_html_e( 'Request Feature', 'orderable' ); ?></a></li>
 				<li><a href="https://orderable.com/documentation/?utm_source=orderable&utm_medium=plugin&utm_campaign=settings-header" target="_blank">
 						<svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20px" height="20px">
 							<path d="M 6 2 C 4.895 2 4 2.895 4 4 L 4 20 C 4 21.105 4.895 22 6 22 L 18 22 C 19.105 22 20 21.105 20 20 L 20 4 C 20 2.895 19.105 2 18 2 L 14 2 L 8 2 L 6 2 z M 6 4 L 8 4 L 8 12 L 11 10.5 L 14 12 L 14 4 L 18 4 L 18 20 L 6 20 L 6 4 z M 10 4 L 12 4 L 12 8.7636719 L 11.894531 8.7109375 L 11 8.2636719 L 10.105469 8.7109375 L 10 8.7636719 L 10 4 z" />
-						</svg> <?php _e( 'View Docs', 'orderable' ); ?></a></li>
+						</svg> <?php esc_html_e( 'View Docs', 'orderable' ); ?></a></li>
 			</ul>
-			<?php printf( '<span class="orderable-settings-header__version" style="margin: 0 0 0 auto; background: #f4f5f6; display: inline-block; padding: 0 10px; border-radius: 13px; height: 26px; line-height: 26px; white-space: nowrap; box-sizing: border-box; color: #65707b;">v%s</span>', ORDERABLE_VERSION ); ?>
+			<?php printf( '<span class="orderable-settings-header__version">v%s</span>', esc_html( ORDERABLE_VERSION ) ); ?>
 		</div>
 		<?php
 	}
@@ -945,7 +927,7 @@ class Orderable_Settings {
 					'content'  => '<h3>' . esc_html__( 'Set Up Your Location', 'orderable' ) . '</h3>' .
 								  '<p>' .
 								  esc_html__( "Configure your location's opening hours, delivery/pickup schedule, and holidays.", 'orderable' ) .
-								  ' <a href="https://orderable.com/getting-started?utm_source=orderable&utm_medium=plugin&utm_campaign=pointer" target="_blank">' . esc_html__( 'Learn more' ) . '</a>.' .
+								  ' <a href="https://orderable.com/getting-started?utm_source=orderable&utm_medium=plugin&utm_campaign=pointer" target="_blank">' . esc_html__( 'Learn more', 'orderable' ) . '</a>.' .
 								  '</p>',
 					'position' => array(
 						'edge'  => 'left',
@@ -961,7 +943,7 @@ class Orderable_Settings {
 					'content'  => '<h3>' . esc_html__( 'Product Layouts', 'orderable' ) . '</h3>' .
 								  '<p>' .
 								  esc_html__( 'Use the Layout Builder to create a product list based on category. Embed your layout using the shortcode or block.', 'orderable' ) .
-								  ' <a href="https://orderable.com/layout-builder?utm_source=orderable&utm_medium=plugin&utm_campaign=pointer" target="_blank">' . esc_html__( 'Learn more' ) . '</a>.' .
+								  ' <a href="https://orderable.com/layout-builder?utm_source=orderable&utm_medium=plugin&utm_campaign=pointer" target="_blank">' . esc_html__( 'Learn more', 'orderable' ) . '</a>.' .
 								  '</p>',
 					'position' => array(
 						'edge'  => 'left',
@@ -976,7 +958,7 @@ class Orderable_Settings {
 					'content'  => '<h3>' . esc_html__( 'Live Order View', 'orderable' ) . '</h3>' .
 								  '<p>' .
 								  esc_html__( 'Use the Live Order View to get notified and manage orders in real time.', 'orderable' ) .
-								  ' <a href="https://orderable.com/process-orders?utm_source=orderable&utm_medium=plugin&utm_campaign=pointer" target="_blank">' . esc_html__( 'Learn more' ) . '</a>.' .
+								  ' <a href="https://orderable.com/process-orders?utm_source=orderable&utm_medium=plugin&utm_campaign=pointer" target="_blank">' . esc_html__( 'Learn more', 'orderable' ) . '</a>.' .
 								  '</p>',
 					'position' => array(
 						'edge'  => 'left',
@@ -1124,6 +1106,13 @@ class Orderable_Settings {
 		}
 
 		wp_enqueue_style( 'wp-block-library' );
+
+		wp_enqueue_style(
+			'orderable-core-settings-sidebar',
+			ORDERABLE_URL . 'inc/vendor/iconic-core/assets/css/settings-sidebar.css',
+			array(),
+			ORDERABLE_VERSION
+		);
 	}
 
 	/**

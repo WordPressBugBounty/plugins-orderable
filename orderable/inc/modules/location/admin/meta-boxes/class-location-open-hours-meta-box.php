@@ -103,7 +103,7 @@ class Orderable_Location_Open_Hours_Meta_Box {
 			<div class="orderable-fields-row__body">
 				<div class="<?php echo esc_attr( $override_open_hours_row_class ); ?>">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Override Default Open Hours', 'Open Hours', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Override Default Open Hours', 'Open Hours', 'orderable' ); ?></h3>
 						<p>
 							<?php
 								echo wp_kses_post(
@@ -116,7 +116,7 @@ class Orderable_Location_Open_Hours_Meta_Box {
 										'orderable_location_open_hours_override_description',
 										sprintf(
 											// translators: %s - Orderable settings URL.
-											__( 'Override the default open hours. You can change the default open hours on the <a href="%s" target="_blank">settings page</a>.', 'orderable-pro' ),
+											__( 'Override the default open hours. You can change the default open hours on the <a href="%s" target="_blank">settings page</a>.', 'orderable' ),
 											esc_url( admin_url( 'admin.php?page=orderable-settings' ) )
 										)
 									)
@@ -129,7 +129,7 @@ class Orderable_Location_Open_Hours_Meta_Box {
 							<span
 								class="orderable-toggle-field orderable-override-open-hours-toggle-field woocommerce-input-toggle woocommerce-input-toggle--<?php echo esc_attr( $class_toggle_field_value ); ?>"
 							>
-								<?php echo esc_html( 'Yes' ); ?>
+								<?php echo esc_html__( 'Yes', 'orderable' ); ?>
 							</span>
 
 							<input
@@ -148,21 +148,55 @@ class Orderable_Location_Open_Hours_Meta_Box {
 
 				<div class="<?php echo esc_attr( $open_hours_row_class ); ?>">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Open Hours', 'Open Hours', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Open Hours', 'Open Hours', 'orderable' ); ?></h3>
 						<p>
 							<?php
-								echo esc_html( __( 'The days and hours your location is open. Leave "Max Orders" empty for no limit', 'orderable-pro' ) );
+								echo esc_html( __( 'The days and hours your location is open. Leave "Max Orders" empty for no limit', 'orderable' ) );
 							?>
 						</p>
 					</div>
 					<div class="orderable-fields-row__body-row-right orderable-store-open-hours__open-hour-fields">
-						<?php echo ( self::get_open_hours_fields( $data['store_general_open_hours'] ) ); ?>
+						<?php
+						$open_hours_allowed = Orderable_Helpers::kses_allowed_html( 'form' );
+
+						$open_hours_allowed['table']  = array( 'class' => true );
+						$open_hours_allowed['thead']  = array();
+						$open_hours_allowed['tbody']  = array();
+						$open_hours_allowed['tr']     = array( 'class' => true );
+						$open_hours_allowed['th']     = array(
+							'class'   => true,
+							'colspan' => true,
+						);
+						$open_hours_allowed['td']     = array( 'class' => true );
+						$open_hours_allowed['label']  = array(
+							'for'   => true,
+							'class' => true,
+						);
+						$open_hours_allowed['strong'] = array( 'class' => true );
+
+						$open_hours_allowed['input'] = array_merge(
+							isset( $open_hours_allowed['input'] ) && is_array( $open_hours_allowed['input'] ) ? $open_hours_allowed['input'] : array(),
+							array(
+								'id'                          => true,
+								'checked'                     => true,
+								'min'                         => true,
+								'max'                         => true,
+								'step'                        => true,
+								'placeholder'                 => true,
+								'data-orderable-day'          => true,
+								'data-orderable-time'         => true,
+								'data-orderable-time-slot-id' => true,
+							)
+						);
+
+						echo wp_kses( self::get_open_hours_fields( $data['store_general_open_hours'] ), $open_hours_allowed );
+						?>
 					</div>
 				</div>
 
 				<div class="orderable-fields-row__body-row orderable-store-open-hours__timezone">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Timezone', 'Open Hours', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Timezone', 'Open Hours', 'orderable' ); ?></h3>
 					</div>
 					<div class="orderable-fields-row__body-row-right">
 						<p>
@@ -186,7 +220,7 @@ class Orderable_Location_Open_Hours_Meta_Box {
 							<span
 								class="orderable-toggle-field orderable-enable-placing_orders_only_within_open_hours-toggle-field woocommerce-input-toggle woocommerce-input-toggle--<?php echo $enable_placing_orders_only_within_open_hours ? esc_attr( 'enabled' ) : esc_attr( 'disabled' ); ?>"
 							>
-								<?php echo esc_html( 'Yes' ); ?>
+								<?php echo esc_html__( 'Yes', 'orderable' ); ?>
 							</span>
 
 							<input
@@ -218,7 +252,7 @@ class Orderable_Location_Open_Hours_Meta_Box {
 
 		$timezone_description = sprintf(
 			// translators: %1$s - site timezone; %2$s - WordPress settings page URL.
-			__( 'Your site\'s current timezone is <code>%1$s</code>. You can edit the timezone on the <a href="%2$s" target="_blank">settings page</a>.', 'orderable-pro' ),
+			__( 'Your site\'s current timezone is <code>%1$s</code>. You can edit the timezone on the <a href="%2$s" target="_blank">settings page</a>.', 'orderable' ),
 			esc_html( $timezone_string ),
 			esc_url( admin_url( 'options-general.php#timezone_string' ) )
 		);
@@ -349,7 +383,7 @@ class Orderable_Location_Open_Hours_Meta_Box {
 	 */
 	protected static function get_day_open_hours( $day_setting ) {
 		if ( empty( $day_setting['enabled'] ) ) {
-			return __( 'Closed', 'orderable-pro' );
+			return __( 'Closed', 'orderable' );
 		}
 
 		$from = $day_setting['from']['hour'] . ':' . $day_setting['from']['minute'] . $day_setting['from']['period'];
@@ -398,14 +432,14 @@ class Orderable_Location_Open_Hours_Meta_Box {
 					</td>
 					<td class="orderable-table__column orderable-table__column--time">
 						<strong class="orderable-table__rwd-labels"><?php esc_html_e( 'Open Hours (From)', 'orderable' ); ?></strong>
-						<?php echo Orderable_Helpers::kses( Orderable_Timings_Settings::get_time_field( 'orderable_settings[' . Orderable_Timings_Settings::$open_hours_key . '][' . $day_number . '][from]', $from ), 'form' ); ?>
+						<?php echo wp_kses( Orderable_Timings_Settings::get_time_field( 'orderable_settings[' . Orderable_Timings_Settings::$open_hours_key . '][' . $day_number . '][from]', $from ), Orderable_Helpers::kses_allowed_html( 'form' ) ); ?>
 					</td>
 					<td class="orderable-table__column orderable-table__column--time">
 						<strong class="orderable-table__rwd-labels"><?php esc_html_e( 'Open Hours (To)', 'orderable' ); ?></strong>
-						<?php echo Orderable_Helpers::kses( Orderable_Timings_Settings::get_time_field( 'orderable_settings[' . Orderable_Timings_Settings::$open_hours_key . '][' . $day_number . '][to]', $to ), 'form' ); ?>
+						<?php echo wp_kses( Orderable_Timings_Settings::get_time_field( 'orderable_settings[' . Orderable_Timings_Settings::$open_hours_key . '][' . $day_number . '][to]', $to ), Orderable_Helpers::kses_allowed_html( 'form' ) ); ?>
 					</td>
 					<td class="orderable-table__column orderable-table__column--last">
-						<?php echo Orderable_Helpers::kses( Orderable_Timings_Settings::get_max_orders_field( 'orderable_settings[' . Orderable_Timings_Settings::$open_hours_key . '][' . $day_number . '][max_orders]', $day_settings ), 'form' ); ?>
+						<?php echo wp_kses( Orderable_Timings_Settings::get_max_orders_field( 'orderable_settings[' . Orderable_Timings_Settings::$open_hours_key . '][' . $day_number . '][max_orders]', $day_settings ), Orderable_Helpers::kses_allowed_html( 'form' ) ); ?>
 					</td>
 				</tr>
 			<?php } ?>

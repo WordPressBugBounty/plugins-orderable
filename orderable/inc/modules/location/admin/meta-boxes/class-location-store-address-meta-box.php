@@ -88,7 +88,7 @@ class Orderable_Location_Store_Address_Meta_Box {
 			<div class="orderable-fields-row__body">
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Address Line 1', 'Location Address', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Address Line 1', 'Location Address', 'orderable' ); ?></h3>
 					</div>
 					<div class="orderable-fields-row__body-row-right orderable-fields-row__body-row-right--slug">
 						<input
@@ -103,7 +103,7 @@ class Orderable_Location_Store_Address_Meta_Box {
 
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Address Line 2', 'Location Address', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Address Line 2', 'Location Address', 'orderable' ); ?></h3>
 					</div>
 					<div class="orderable-fields-row__body-row-right orderable-fields-row__body-row-right--slug">
 						<input
@@ -118,7 +118,7 @@ class Orderable_Location_Store_Address_Meta_Box {
 
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'City', 'Location Address', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'City', 'Location Address', 'orderable' ); ?></h3>
 					</div>
 					<div class="orderable-fields-row__body-row-right orderable-fields-row__body-row-right--slug">
 						<input
@@ -133,7 +133,7 @@ class Orderable_Location_Store_Address_Meta_Box {
 
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Country / State', 'Location Address', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Country / State', 'Location Address', 'orderable' ); ?></h3>
 					</div>
 					<div class="orderable-fields-row__body-row-right orderable-fields-row__body-row-right--slug">
 						<select
@@ -149,7 +149,7 @@ class Orderable_Location_Store_Address_Meta_Box {
 
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Postcode / ZIP', 'Location Address', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Postcode / ZIP', 'Location Address', 'orderable' ); ?></h3>
 					</div>
 					<div class="orderable-fields-row__body-row-right orderable-fields-row__body-row-right--slug">
 						<input

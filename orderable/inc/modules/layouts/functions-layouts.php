@@ -13,9 +13,12 @@ defined( 'ABSPATH' ) || exit;
  * @param int|null $id
  */
 function orderable( $id = null ) {
-	echo Orderable_Layouts::orderable_shortcode(
-		array(
-			'id' => $id,
-		)
+	echo wp_kses(
+		Orderable_Layouts::orderable_shortcode(
+			array(
+				'id' => $id,
+			)
+		),
+		Orderable_Helpers::kses_allowed_html( 'frontend' )
 	);
 }

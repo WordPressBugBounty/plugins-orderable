@@ -143,16 +143,16 @@ class Orderable_Location_Admin {
 				'nonce'    => wp_create_nonce( 'orderable-dz-nonce' ),
 				'action'   => 'orderable_dz_crud',
 				'text'     => array(
-					'modal_add'            => esc_html__( 'Add Delivery Zone', 'orderable-pro' ),
-					'modal_update'         => esc_html__( 'Update Delivery Zone', 'orderable-pro' ),
-					'zone_title'           => esc_html__( 'Delivery Zone', 'orderable-pro' ),
-					'zone_edit'            => esc_html__( 'Edit', 'orderable-pro' ),
-					'zone_remove'          => esc_html__( 'Remove', 'orderable-pro' ),
-					'zone_confirm_remove'  => esc_html__( 'Are you sure you want to remove this zone?', 'orderable-pro' ),
-					'zone_confirm_delete'  => esc_html__( 'Are you sure you want to delete this zone?', 'orderable-pro' ),
-					'successfully_added'   => esc_html__( 'successfully added!', 'orderable-pro' ),
-					'successfully_updated' => esc_html__( 'successfully updated!', 'orderable-pro' ),
-					'successfully_removed' => esc_html__( 'successfully removed!', 'orderable-pro' ),
+					'modal_add'            => esc_html__( 'Add Delivery Zone', 'orderable' ),
+					'modal_update'         => esc_html__( 'Update Delivery Zone', 'orderable' ),
+					'zone_title'           => esc_html__( 'Delivery Zone', 'orderable' ),
+					'zone_edit'            => esc_html__( 'Edit', 'orderable' ),
+					'zone_remove'          => esc_html__( 'Remove', 'orderable' ),
+					'zone_confirm_remove'  => esc_html__( 'Are you sure you want to remove this zone?', 'orderable' ),
+					'zone_confirm_delete'  => esc_html__( 'Are you sure you want to delete this zone?', 'orderable' ),
+					'successfully_added'   => esc_html__( 'successfully added!', 'orderable' ),
+					'successfully_updated' => esc_html__( 'successfully updated!', 'orderable' ),
+					'successfully_removed' => esc_html__( 'successfully removed!', 'orderable' ),
 				),
 			)
 		);
@@ -216,10 +216,10 @@ class Orderable_Location_Admin {
 							</div>
 
 							<div class="orderable-cta">
-								<h3 class="orderable-cta__title"><?php _e( 'Unlock Multi-Location Power with Orderable Pro', 'orderable' ); ?></h3>
-								<p class="orderable-cta__description"><?php _e( 'Manage multiple locations effortlessly with Orderable Pro, perfect for businesses with more than one location. Take control of your delivery and pickup services like never before.', 'orderable' ); ?></p>
-								<p><a href="<?php echo esc_url( Orderable_Helpers::get_pro_url( 'multi-location', 'pricing' ) ); ?>" class="orderable-admin-button orderable-admin-button--pro" target="_blank"><span class="dashicons dashicons-star-filled"></span> <?php _e( 'Upgrade Now', 'orderable' ); ?></a></p>
-								<p><?php _e( 'or', 'orderable' ); ?> <a href="<?php echo esc_url( Orderable_Helpers::get_pro_url( 'multi-location' ) ); ?>" target="_blank"><?php _e( 'learn more', 'orderable' ); ?></a></p>
+								<h3 class="orderable-cta__title"><?php esc_html_e( 'Unlock Multi-Location Power with Orderable Pro', 'orderable' ); ?></h3>
+								<p class="orderable-cta__description"><?php esc_html_e( 'Manage multiple locations effortlessly with Orderable Pro, perfect for businesses with more than one location. Take control of your delivery and pickup services like never before.', 'orderable' ); ?></p>
+								<p><a href="<?php echo esc_url( Orderable_Helpers::get_pro_url( 'multi-location', 'pricing' ) ); ?>" class="orderable-admin-button orderable-admin-button--pro" target="_blank"><span class="dashicons dashicons-star-filled"></span> <?php esc_html_e( 'Upgrade Now', 'orderable' ); ?></a></p>
+								<p><?php esc_html_e( 'or', 'orderable' ); ?> <a href="<?php echo esc_url( Orderable_Helpers::get_pro_url( 'multi-location' ) ); ?>" target="_blank"><?php esc_html_e( 'learn more', 'orderable' ); ?></a></p>
 							</div>
 						</div>
 					</div>

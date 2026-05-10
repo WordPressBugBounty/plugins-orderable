@@ -1,4 +1,15 @@
-<link rel="stylesheet" href="<?php echo esc_attr( ORDERABLE_ASSETS_URL ); ?>/admin/css/upgrade-pro.css">
+<?php
+
+defined( 'ABSPATH' ) || exit;
+
+wp_enqueue_style(
+	'orderable-upgrade-pro',
+	ORDERABLE_ASSETS_URL . 'admin/css/upgrade-pro.css',
+	array(),
+	ORDERABLE_VERSION
+);
+
+?>
 
 <div class="ordpro-upgrade-wrap">
 	<div class="ordpro-upgrade__header">
@@ -254,16 +265,12 @@
 
 	</div>
 </div>
-<script>
-	jQuery( '.ordpro-upgrade-faqs__body-faq-header' ).click( function() {
-		var $faq = jQuery(this).closest( '.ordpro-upgrade-faqs__body-faq' );
-		var is_open = $faq.hasClass('ordpro-upgrade-faqs__body-faq--open');
-		if ( is_open ) {
-			$faq.find('.ordpro-upgrade-faqs__body-faq-content').slideUp();
-			$faq.removeClass('ordpro-upgrade-faqs__body-faq--open');
-		} else {
-			$faq.find('.ordpro-upgrade-faqs__body-faq-content').slideDown();
-			$faq.addClass('ordpro-upgrade-faqs__body-faq--open');
-		}
-	} );
-</script>
+<?php
+wp_enqueue_script(
+	'orderable-upgrade-pro',
+	ORDERABLE_ASSETS_URL . 'admin/js/upgrade-pro.js',
+	array( 'jquery' ),
+	ORDERABLE_VERSION,
+	true
+);
+?>

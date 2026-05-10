@@ -35,7 +35,7 @@ class Orderable_Ask_Review {
 	 * @return void
 	 */
 	public static function dismiss_notice() {
-		$orderable_dismiss_review_notice = filter_input( INPUT_GET, 'orderable_dismiss_review_notice' );
+		$orderable_dismiss_review_notice = filter_input( INPUT_GET, 'orderable_dismiss_review_notice', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
 		if ( ! $orderable_dismiss_review_notice ) {
 			return;
@@ -113,8 +113,7 @@ class Orderable_Ask_Review {
 		$review_url  = 'https://wordpress.org/support/plugin/orderable/reviews/#new-post';
 
 		if ( isset( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['REQUEST_URI'] ) ) {
-			// phpcs:ignore
-			$current_url  = wp_unslash( $_SERVER['HTTP_HOST'] ) . wp_unslash( $_SERVER['REQUEST_URI'] );
+			$current_url  = sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) . esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) );
 			$current_url .= ( strpos( $current_url, '?' ) ? '&' : '?' ) . http_build_query(
 				array(
 					'orderable_dismiss_review_notice' => '1',
@@ -126,8 +125,8 @@ class Orderable_Ask_Review {
 
 		if ( self::should_display_notice() ) {
 			?>
-			<div class="notice notice-warning is-dismissible notice-orderable-ask-review" style="border-left-color: #4233B6;">
-				<h4 style='margin-bottom: 10px;'>
+			<div class="notice notice-warning is-dismissible notice-orderable-ask-review">
+				<h4>
 					<?php
 					/* translators: %1$s - number of orders. */
 						echo esc_html( sprintf( __( 'You have processed %1$s+ orders with Orderable 🥳', 'orderable' ), self::$order_count_required ) );

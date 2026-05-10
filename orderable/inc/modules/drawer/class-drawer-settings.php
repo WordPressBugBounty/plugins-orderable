@@ -24,6 +24,24 @@ class Orderable_Drawer_Settings {
 		add_filter( 'wpsf_register_settings_orderable', array( __CLASS__, 'register_settings' ), 20 );
 		add_filter( 'orderable_settings_validate', array( __CLASS__, 'validate_settings' ), 10 );
 		add_action( 'init', array( __CLASS__, 'position_accordion' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ) );
+	}
+
+	/**
+	 * Enqueue admin assets for the drawer settings fields.
+	 */
+	public static function enqueue_admin_assets() {
+		if ( ! Orderable_Settings::is_settings_page() ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'orderable-drawer-settings',
+			ORDERABLE_URL . 'inc/modules/drawer/assets/admin/js/drawer-settings.js',
+			array( 'jquery' ),
+			ORDERABLE_VERSION,
+			true
+		);
 	}
 
 	/**
@@ -183,69 +201,7 @@ class Orderable_Drawer_Settings {
 			</tr>
 			</tbody>
 		</table>
-
-		<script>
-			jQuery( document ).ready( function( $ ) {
-				var $fields = {
-					top: $( '#orderable-fine-tune-cart-top' ),
-					right: $( '#orderable-fine-tune-cart-right' ),
-					bottom: $( '#orderable-fine-tune-cart-bottom' ),
-					left: $( '#orderable-fine-tune-cart-left' )
-				};
-
-				/**
-				 * Hide fields.
-				 */
-				function hide_fields() {
-					$fields.top.closest( 'tr' ).hide();
-					$fields.right.closest( 'tr' ).hide();
-					$fields.bottom.closest( 'tr' ).hide();
-					$fields.left.closest( 'tr' ).hide();
-				}
-
-				/**
-				 * Show fields.
-				 *
-				 * @param position
-				 */
-				function show_fields( position ) {
-					hide_fields();
-
-					var $table = $fields.top.closest( 'table' );
-
-					$table.closest( 'tr' ).show();
-
-					if ( 'tr' === position ) {
-						$fields.top.closest( 'tr' ).show();
-						$fields.right.closest( 'tr' ).show();
-					} else if ( 'br' === position ) {
-						$fields.bottom.closest( 'tr' ).show();
-						$fields.right.closest( 'tr' ).show();
-					} else if ( 'bl' === position ) {
-						$fields.bottom.closest( 'tr' ).show();
-						$fields.left.closest( 'tr' ).show();
-					} else if ( 'tl' === position ) {
-						$fields.top.closest( 'tr' ).show();
-						$fields.left.closest( 'tr' ).show();
-					} else {
-						$fields.top.closest( 'table' ).closest( 'tr' ).hide();
-					}
-
-					$table.find( 'tr' ).removeClass( 'orderable-table__row--last' );
-					$table.find( 'tr' ).not( '[style*="display: none"]' ).last().addClass( 'orderable-table__row--last' );
-				}
-
-				var $position_field = $( '#style_cart_position' );
-
-				show_fields( $position_field.val() );
-
-				$position_field.on( 'change', function() {
-					show_fields( $( this ).val() );
-				} );
-			} );
-		</script>
 		<?php
-
 		return ob_get_clean();
 	}
 

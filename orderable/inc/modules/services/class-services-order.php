@@ -195,7 +195,7 @@ class Orderable_Services_Order {
 			$background = apply_filters( 'orderable_service_type_column_background_color', $background, $column_name, $post_id, $order, $type );
 			$color      = apply_filters( 'orderable_service_type_column_text_color', $color, $column_name, $post_id, $order, $type );
 
-			printf( '<mark class="order-status order-status--%s" style="background-color: %s; color: %s;"><span>%s</span></mark>', esc_attr( $type ), esc_attr( $background ), esc_attr( $color ), Orderable_Services::get_service_label( $type ) );
+			printf( '<mark class="order-status order-status--%s" style="background-color: %s; color: %s;"><span>%s</span></mark>', esc_attr( $type ), esc_attr( $background ), esc_attr( $color ), esc_html( Orderable_Services::get_service_label( $type ) ) );
 		}
 	}
 

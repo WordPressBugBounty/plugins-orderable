@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Template: Delivery Zones Modal (Add/Update)
  *

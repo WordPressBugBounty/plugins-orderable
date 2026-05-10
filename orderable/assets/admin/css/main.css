@@ -532,6 +532,10 @@ body .submit .button-primary .dashicons,
   margin: 1em 0;
 }
 
+.iconic-onboard-modal-setting__field-label {
+  margin: 0 0 8px;
+}
+
 .orderable-time {
   white-space: nowrap;
 }
@@ -570,6 +574,83 @@ body input.datepicker {
   display: none;
 }
 
+.orderable-receipt-layouts__field-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+/**
+ * Settings page header (logo, links, version badge).
+ */
+.wpsf-settings__header {
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.orderable-settings-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.orderable-settings-header__links {
+  margin: 0 10px 0 0;
+  padding: 0;
+  list-style: none none outside;
+  height: 20px;
+}
+
+.orderable-settings-header__links li {
+  margin: 0 10px 0 0;
+  padding: 0;
+  display: inline-block;
+}
+
+.orderable-settings-header__links a {
+  text-decoration: none;
+  color: #64707b !important;
+  white-space: nowrap;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.orderable-settings-header__links a:hover {
+  color: #7031f5 !important;
+}
+
+.orderable-settings-header__links a svg {
+  fill: #7031f5;
+  margin-right: 4px;
+}
+
+.orderable-settings-header__version {
+  margin: 0 0 0 auto;
+  background: #f4f5f6;
+  display: inline-block;
+  padding: 0 10px;
+  border-radius: 13px;
+  height: 26px;
+  line-height: 26px;
+  white-space: nowrap;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  color: #65707b;
+}
+
+@media screen and (max-width: 648px) {
+  .orderable-settings-header__links {
+    display: none;
+  }
+}
 .orderable-ui-hide {
   display: none !important;
 }
@@ -1082,23 +1163,6 @@ input[type=color].orderable-fields-option-color:focus {
 .orderable-fields-option-img__delete:hover {
   background: #a00;
   color: #fff !important;
-}
-
-.orderable-pro-modal {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  height: 100%;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-
-.orderable-pro-modal__content {
-  text-align: center;
-  padding: 20px;
-  margin: auto 0;
 }
 
 .orderable-pointer .wp-pointer-content {

@@ -21,6 +21,19 @@ class Orderable_Admin_Notices {
 
 		add_action( 'admin_notices', array( __CLASS__, 'display_notices' ) );
 		add_action( 'admin_init', array( __CLASS__, 'dismiss' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
+	}
+
+	/**
+	 * Enqueue notice styles in the admin.
+	 */
+	public static function enqueue_assets() {
+		wp_enqueue_style(
+			'orderable-admin-notices',
+			ORDERABLE_ASSETS_URL . 'admin/css/admin-notices.css',
+			array(),
+			ORDERABLE_VERSION
+		);
 	}
 
 	/**
@@ -32,7 +45,6 @@ class Orderable_Admin_Notices {
 			return;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification
 		$action = empty( $_GET['orderable_action'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['orderable_action'] ) );
 
 		// Not our notices, bail.
@@ -40,8 +52,14 @@ class Orderable_Admin_Notices {
 			return;
 		}
 
+		$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
+
+		if ( ! wp_verify_nonce( $nonce, 'orderable_dismiss_notice' ) ) {
+			return;
+		}
+
 		// Get notice.
-		$name = empty( $_GET['orderable_notice'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['orderable_notice'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$name = empty( $_GET['orderable_notice'] ) ? '' : sanitize_text_field( wp_unslash( $_GET['orderable_notice'] ) );
 
 		if ( ! $name ) {
 			return;
@@ -85,7 +103,7 @@ class Orderable_Admin_Notices {
 			if ( is_null( $notice['name'] ) || self::is_dismissed( $notice['name'] ) ) {
 				continue;
 			} ?>
-			<div class="notice notice--orderable" style="border-left-color: #7031F5;">
+			<div class="notice notice--orderable">
 				<p><strong><?php echo wp_kses_post( $notice['title'] ); ?></strong></p>
 				<p><?php echo wp_kses_post( $notice['description'] ); ?></p>
 				<?php if ( $notice['dismissable'] ) { ?>
@@ -93,15 +111,18 @@ class Orderable_Admin_Notices {
 						<a href="
 						<?php
 						echo esc_url(
-							add_query_arg(
-								array(
-									'orderable_action' => 'dismiss_notice',
-									'orderable_notice' => $notice['name'],
-								)
+							wp_nonce_url(
+								add_query_arg(
+									array(
+										'orderable_action' => 'dismiss_notice',
+										'orderable_notice' => $notice['name'],
+									)
+								),
+								'orderable_dismiss_notice'
 							)
 						);
 						?>
-									"><?php _e( 'Dismiss Notice', 'orderable' ); ?></a>
+									"><?php esc_html_e( 'Dismiss Notice', 'orderable' ); ?></a>
 					</p>
 				<?php } ?>
 			</div>

@@ -95,10 +95,10 @@ class Orderable_Location_Store_Services_Meta_Box {
 			<div class="orderable-fields-row__body">
 				<div class="orderable-fields-row__body-row orderable-store-services">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Enable Services', 'Location Services', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Enable Services', 'Location Services', 'orderable' ); ?></h3>
 						<p>
 							<?php
-								echo esc_html__( 'Which services does this location offer?', 'orderable-pro' );
+								echo esc_html__( 'Which services does this location offer?', 'orderable' );
 							?>
 						</p>
 					</div>
@@ -107,10 +107,10 @@ class Orderable_Location_Store_Services_Meta_Box {
 							<span
 								class="<?php echo esc_attr( $store_services_delivery_toggle_class ); ?>"
 							>
-								<?php echo esc_html( 'Delivery' ); ?>
+								<?php echo esc_html__( 'Delivery', 'orderable' ); ?>
 							</span>
 							<span class="orderable-store-services__enable-service-label">
-								<?php echo esc_html( 'Delivery' ); ?>
+								<?php echo esc_html__( 'Delivery', 'orderable' ); ?>
 							</span>
 
 							<input
@@ -124,10 +124,10 @@ class Orderable_Location_Store_Services_Meta_Box {
 							<span
 								class="<?php echo esc_attr( $store_services_pickup_toggle_class ); ?>"
 							>
-								<?php echo esc_html__( 'Pickup', 'orderable-pro' ); ?>
+								<?php echo esc_html__( 'Pickup', 'orderable' ); ?>
 							</span>
 							<span class="orderable-store-services__enable-service-label">
-								<?php echo esc_html__( 'Pickup', 'orderable-pro' ); ?>
+								<?php echo esc_html__( 'Pickup', 'orderable' ); ?>
 							</span>
 
 							<input
@@ -142,9 +142,9 @@ class Orderable_Location_Store_Services_Meta_Box {
 
 				<div class="orderable-fields-row__body-row orderable-store-services__service-hours">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Service Hours', 'Location Services', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Service Hours', 'Location Services', 'orderable' ); ?></h3>
 						<p>
-							<?php echo esc_html( __( 'Set Service Hours and Delivery Zones for your Delivery service.', 'orderable-pro' ) ); ?>
+							<?php echo esc_html( __( 'Set Service Hours and Delivery Zones for your Delivery service.', 'orderable' ) ); ?>
 						</p>
 						<br />
 						<p>
@@ -152,7 +152,7 @@ class Orderable_Location_Store_Services_Meta_Box {
 								echo esc_html(
 									__(
 										'The days and hours where you offer delivery/pickup services.',
-										'orderable-pro'
+										'orderable'
 									)
 								);
 							?>
@@ -500,7 +500,7 @@ class Orderable_Location_Store_Services_Meta_Box {
 								</td>
 							</tr>
 							<?php
-								echo Orderable_Helpers::kses( Orderable_Timings_Settings::get_time_slot_fields( 'service_hours[' . $type . '][' . $index . ']', $settings ), 'form' );
+								echo Orderable_Helpers::kses( Orderable_Timings_Settings::get_time_slot_fields( 'service_hours[' . $type . '][' . $index . ']', $settings ), 'form' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses() handles escaping internally and registers safe_style_css for the inline `display:none` toggle on time-slot rows.
 								/**
 								 * Render content at the end of the time slots table.
 								 *

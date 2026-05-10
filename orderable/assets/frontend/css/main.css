@@ -565,6 +565,8 @@ img + .orderable-product__tags {
   border-radius: 11px;
   min-width: 18px;
   text-align: center;
+  -webkit-animation: wobble-hor-bottom 0.8s both;
+          animation: wobble-hor-bottom 0.8s both;
 }
 
 .orderable-product__actions-button {

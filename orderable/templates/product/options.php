@@ -41,7 +41,7 @@ $orderable_single_product = true; ?>
 					<?php foreach ( $attributes as $attribute_name => $options ) : ?>
 						<tr class="orderable-product__option">
 							<th class="orderable-product__option-label">
-								<label for="<?php echo esc_attr( sanitize_title( $attribute_name ) ); ?>"><?php echo wc_attribute_label( $attribute_name ); // WPCS: XSS ok. ?></label>
+								<label for="<?php echo esc_attr( sanitize_title( $attribute_name ) ); ?>"><?php echo esc_html( wc_attribute_label( $attribute_name ) ); ?></label>
 							</th>
 							<td class="orderable-product__option-select">
 								<?php
@@ -66,7 +66,15 @@ $orderable_single_product = true; ?>
 			<div class="orderable-product__messages"></div>
 
 			<?php if ( ! empty( $variations_json ) ) : ?>
-				<script class="orderable-product__variations" type="application/json"><?php echo $variations_json; ?></script>
+				<script class="orderable-product__variations" type="application/json"><?php
+					// $variations_json is produced by wp_json_encode() upstream. Inside
+					// <script type="application/json"> the browser does not decode HTML
+					// entities, so HTML-escaping the JSON would corrupt it (e.g. `&` →
+					// `&amp;` would persist literally and break JSON.parse). The default
+					// wp_json_encode flags already escape `/` so a `</script>` sequence
+					// cannot form. No further escaping is appropriate here.
+					echo $variations_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				?></script>
 			<?php endif; ?>
 		</div>
 

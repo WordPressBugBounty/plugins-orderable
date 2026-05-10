@@ -31,7 +31,7 @@ class Orderable_Checkout {
 	public static function register_settings( $settings = array() ) {
 		$settings['tabs'][] = array(
 			'id'       => 'checkout',
-			'title'    => __( 'Checkout Settings', 'orderable-pro' ),
+			'title'    => __( 'Checkout Settings', 'orderable' ),
 			'priority' => 20,
 		);
 

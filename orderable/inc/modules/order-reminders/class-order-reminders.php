@@ -585,7 +585,7 @@ class Orderable_Order_Reminders {
 							<?php foreach ( $service_dates as $service_date_data ) { ?>
 								<option
 									value="<?php echo esc_attr( $service_date_data['timestamp'] ); ?>"
-									data-orderable-slots="<?php echo wc_esc_json( wp_json_encode( array_values( $service_date_data['slots'] ) ) ); ?>"
+									data-orderable-slots="<?php echo esc_attr( wp_json_encode( array_values( $service_date_data['slots'] ) ) ); ?>"
 								>
 									<?php echo esc_html( $service_date_data['formatted'] ); ?>
 								</option>

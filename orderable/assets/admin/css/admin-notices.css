@@ -1,0 +1,11 @@
+.notice--orderable {
+	border-left-color: #7031F5;
+}
+
+.notice-orderable-ask-review {
+	border-left-color: #4233B6;
+}
+
+.notice-orderable-ask-review h4 {
+	margin-bottom: 10px;
+}

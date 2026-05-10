@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Title: Packing Slip
  * Description: Packing Slip ticket pattern

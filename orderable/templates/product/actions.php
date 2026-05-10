@@ -32,7 +32,7 @@ do_action( 'orderable_before_product_actions', $product, $args );
 
 <div class="orderable-product__actions">
 	<div class="orderable-product__actions-price">
-		<?php echo $product->get_price_html(); ?>
+		<?php echo wp_kses_post( $product->get_price_html() ); ?>
 	</div>
 	<div class="orderable-product__actions-button">
 		<?php

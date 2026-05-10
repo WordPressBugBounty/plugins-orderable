@@ -44,13 +44,15 @@ if ( ! $args['images'] ) {
 		$srcset = $product_image_2x['src'] . ' 2x';
 	}
 
-	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	echo $product->get_image(
-		$orderable_product_hero_image_size,
-		[
-			'class'  => 'orderable-product__image',
-			'srcset' => esc_attr( $srcset ),
-		]
+	echo wp_kses(
+		$product->get_image(
+			$orderable_product_hero_image_size,
+			[
+				'class'  => 'orderable-product__image',
+				'srcset' => esc_attr( $srcset ),
+			]
+		),
+		Orderable_Helpers::kses_allowed_html( 'frontend' )
 	);
 	?>
 

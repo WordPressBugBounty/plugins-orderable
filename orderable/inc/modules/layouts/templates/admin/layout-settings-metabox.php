@@ -1,12 +1,17 @@
+<?php
+
+defined( 'ABSPATH' ) || exit;
+
+?>
 <div class="orderable-fields-row orderable-fields-row--meta">
 	<div class="orderable-fields-row__body">
 
 		<div class="orderable-fields-row__body-row">
 			<div class="orderable-fields-row__body-row-left">
 				<h3>
-					<label for="categories"><?php _e( 'Categories', 'orderable' ); ?></label>
+					<label for="categories"><?php esc_html_e( 'Categories', 'orderable' ); ?></label>
 				</h3>
-				<p><?php _e( 'Select which product categories to display in this layout.', 'orderable' ); ?></p>
+				<p><?php esc_html_e( 'Select which product categories to display in this layout.', 'orderable' ); ?></p>
 			</div>
 			<div class="orderable-fields-row__body-row-right">
 				<?php
@@ -31,9 +36,9 @@
 		<div class="orderable-fields-row__body-row">
 			<div class="orderable-fields-row__body-row-left">
 				<h3>
-					<label for="layout"><?php _e( 'Display', 'orderable' ); ?></label>
+					<label for="layout"><?php esc_html_e( 'Display', 'orderable' ); ?></label>
 				</h3>
-				<p><?php _e( 'How should the products be displayed?', 'orderable' ); ?></p>
+				<p><?php esc_html_e( 'How should the products be displayed?', 'orderable' ); ?></p>
 			</div>
 			<div class="orderable-fields-row__body-row-right">
 				<?php
@@ -80,7 +85,7 @@
 		<div class="orderable-fields-row__body-row">
 			<div class="orderable-fields-row__body-row-left">
 				<h3>
-					<label for="layout"><?php _e( 'Sections', 'orderable' ); ?></label>
+					<label for="layout"><?php esc_html_e( 'Sections', 'orderable' ); ?></label>
 				</h3>
 				<p><?php esc_html_e( 'Separate each category by titles or tabs.', 'orderable' ); ?></p>
 			</div>
@@ -92,9 +97,9 @@
 		<div class="orderable-fields-row__body-row">
 			<div class="orderable-fields-row__body-row-left">
 				<h3>
-					<label for="images"><?php _e( 'Images', 'orderable' ); ?></label>
+					<label for="images"><?php esc_html_e( 'Images', 'orderable' ); ?></label>
 				</h3>
-				<p><?php _e( 'Should product images be displayed?', 'orderable' ); ?></p>
+				<p><?php esc_html_e( 'Should product images be displayed?', 'orderable' ); ?></p>
 			</div>
 			<div class="orderable-fields-row__body-row-right">
 				<?php
@@ -113,9 +118,9 @@
 		<div class="orderable-fields-row__body-row">
 			<div class="orderable-fields-row__body-row-left">
 				<h3>
-					<label for="clickable_card"><?php _e( 'Clickable Card', 'orderable' ); ?></label>
+					<label for="clickable_card"><?php esc_html_e( 'Clickable Card', 'orderable' ); ?></label>
 				</h3>
-				<p><?php _e( 'Choose what happens when you click the product card.', 'orderable' ); ?></p>
+				<p><?php esc_html_e( 'Choose what happens when you click the product card.', 'orderable' ); ?></p>
 			</div>
 			<div class="orderable-fields-row__body-row-right">
 				<?php
@@ -168,5 +173,3 @@
 		?>
 	</div>
 </div>
-
-<?php Orderable_Helpers::orderable_pro_modal(); ?>

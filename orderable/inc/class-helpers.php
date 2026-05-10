@@ -103,39 +103,50 @@ class Orderable_Helpers {
 			return false;
 		}
 
+		$singular = $labels['singular'];
+		$plural   = $labels['plural'];
+
 		return array(
-			'name'                  => $labels['plural'],
-			'singular_name'         => $labels['singular'],
-			'menu_name'             => $labels['plural'],
-			'name_admin_bar'        => $labels['singular'],
+			'name'                  => $plural,
+			'singular_name'         => $singular,
+			'menu_name'             => $plural,
+			'name_admin_bar'        => $singular,
 			'add_new'               => __( 'Add New', 'orderable' ),
-			'add_new_item'          => sprintf( __( 'Add New %s', 'orderable' ), $labels['singular'] ),
-			'new_item'              => sprintf( __( 'New %s', 'orderable' ), $labels['singular'] ),
-			'edit_item'             => sprintf( __( 'Edit %s', 'orderable' ), $labels['singular'] ),
-			'view_item'             => sprintf( __( 'View %s', 'orderable' ), $labels['singular'] ),
-			'all_items'             => $labels['plural'],
-			'search_items'          => sprintf( __( 'Search %s', 'orderable' ), $labels['plural'] ),
-			'parent_item_colon'     => sprintf( __( 'Parent %s:', 'orderable' ), $labels['plural'] ),
-			'not_found'             => sprintf( __( 'No %s found.', 'orderable' ), strtolower( $labels['plural'] ) ),
-			'not_found_in_trash'    => sprintf( __( 'No %s found in trash.', 'orderable' ), strtolower( $labels['plural'] ) ),
-			'featured_image'        => sprintf( _x( '%s Featured Image', 'Overrides the “Featured Image” phrase for this post type. Added in 4.3', 'orderable' ), $labels['singular'] ),
+			/* translators: %s - singular post type name. */
+			'add_new_item'          => sprintf( __( 'Add New %s', 'orderable' ), $singular ),
+			/* translators: %s - singular post type name. */
+			'new_item'              => sprintf( __( 'New %s', 'orderable' ), $singular ),
+			/* translators: %s - singular post type name. */
+			'edit_item'             => sprintf( __( 'Edit %s', 'orderable' ), $singular ),
+			/* translators: %s - singular post type name. */
+			'view_item'             => sprintf( __( 'View %s', 'orderable' ), $singular ),
+			'all_items'             => $plural,
+			/* translators: %s - plural post type name. */
+			'search_items'          => sprintf( __( 'Search %s', 'orderable' ), $plural ),
+			/* translators: %s - plural post type name. */
+			'parent_item_colon'     => sprintf( __( 'Parent %s:', 'orderable' ), $plural ),
+			/* translators: %s - plural post type name (lowercased). */
+			'not_found'             => sprintf( __( 'No %s found.', 'orderable' ), strtolower( $plural ) ),
+			/* translators: %s - plural post type name (lowercased). */
+			'not_found_in_trash'    => sprintf( __( 'No %s found in trash.', 'orderable' ), strtolower( $plural ) ),
+			/* translators: %s - singular post type name. */
+			'featured_image'        => sprintf( _x( '%s Featured Image', 'Overrides the “Featured Image” phrase for this post type. Added in 4.3', 'orderable' ), $singular ),
 			'set_featured_image'    => _x( 'Set featured image', 'Overrides the “Set featured image” phrase for this post type. Added in 4.3', 'orderable' ),
 			'remove_featured_image' => _x( 'Remove featured image', 'Overrides the “Remove featured image” phrase for this post type. Added in 4.3', 'orderable' ),
 			'use_featured_image'    => _x( 'Use as featured image', 'Overrides the “Use as featured image” phrase for this post type. Added in 4.3', 'orderable' ),
-			'archives'              => sprintf( _x( '%s archives', 'The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4', 'orderable' ), $labels['plural'] ),
-			'insert_into_item'      => sprintf( _x( 'Insert into %s', 'Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4', 'orderable' ), strtolower( $labels['singular'] ) ),
-			'uploaded_to_this_item' => sprintf( _x( 'Uploaded to this %s', 'Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4', 'orderable' ), strtolower( $labels['singular'] ) ),
-			'filter_items_list'     => sprintf( _x( 'Filter %s list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'orderable' ), strtolower( $labels['plural'] ) ),
-			'items_list_navigation' => sprintf( _x( '%s list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'orderable' ), $labels['plural'] ),
-			'items_list'            => sprintf( _x( '%s list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'orderable' ), $labels['plural'] ),
+			/* translators: %s - plural post type name. */
+			'archives'              => sprintf( _x( '%s archives', 'The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4', 'orderable' ), $plural ),
+			/* translators: %s - singular post type name (lowercased). */
+			'insert_into_item'      => sprintf( _x( 'Insert into %s', 'Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4', 'orderable' ), strtolower( $singular ) ),
+			/* translators: %s - singular post type name (lowercased). */
+			'uploaded_to_this_item' => sprintf( _x( 'Uploaded to this %s', 'Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4', 'orderable' ), strtolower( $singular ) ),
+			/* translators: %s - plural post type name (lowercased). */
+			'filter_items_list'     => sprintf( _x( 'Filter %s list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'orderable' ), strtolower( $plural ) ),
+			/* translators: %s - plural post type name. */
+			'items_list_navigation' => sprintf( _x( '%s list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'orderable' ), $plural ),
+			/* translators: %s - plural post type name. */
+			'items_list'            => sprintf( _x( '%s list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'orderable' ), $plural ),
 		);
-	}
-
-	/**
-	 * Outputs the pro feature modal.
-	 */
-	public static function orderable_pro_modal() {
-		require_once self::get_template_path( 'templates/admin/orderable-pro-modal.php' );
 	}
 
 	/**
@@ -184,10 +195,360 @@ class Orderable_Helpers {
 			$allowed_html['span']   = $allowed_attributes;
 			$allowed_html['select'] = $allowed_attributes;
 			$allowed_html['option'] = $allowed_attributes;
-			$allowed_html['input']  = $allowed_attributes;
+
+			// Time-slot rows are toggled via inline style and tagged with data-orderable-period;
+			// the frequency input also carries placeholder/min/max/step. Without these,
+			// the orderable_get_time_slot_fields filter output (and Orderable Pro's override)
+			// renders without hidden-row toggling and loses input hints.
+			$allowed_html['input'] = array_merge(
+				$allowed_attributes,
+				array(
+					'placeholder' => array(),
+					'min'         => array(),
+					'max'         => array(),
+					'step'        => array(),
+				)
+			);
+
+			$allowed_html['tr'] = array(
+				'class'                 => array(),
+				'style'                 => array(),
+				'data-orderable-period' => array(),
+			);
+
+			$allowed_html['th'] = array(
+				'class'   => array(),
+				'colspan' => array(),
+				'rowspan' => array(),
+			);
+
+			$allowed_html['td'] = array(
+				'class'   => array(),
+				'colspan' => array(),
+				'rowspan' => array(),
+				'style'   => array(),
+			);
+
+			$allowed_html['fieldset'] = array( 'class' => array() );
+			$allowed_html['legend']   = array( 'class' => array() );
+			$allowed_html['table']    = array( 'class' => array() );
+			$allowed_html['thead']    = array();
+			$allowed_html['tbody']    = array();
+		}
+
+		if ( 'frontend' === $context ) {
+			$allowed_html = self::extend_kses_for_frontend( $allowed_html );
 		}
 
 		return $allowed_html;
+	}
+
+	/**
+	 * Extend the post kses allowlist with the tags, attributes, and
+	 * `data-*` attributes used by Orderable's frontend output (product
+	 * cards, add-to-cart buttons, quantity rollers, etc.).
+	 *
+	 * Applied via `Orderable_Helpers::kses_allowed_html( 'frontend' )`,
+	 * which is used to escape shortcode output without stripping the
+	 * `data-orderable-*` attributes the JS depends on.
+	 *
+	 * @param array $allowed_html The base allowlist (post context).
+	 * @return array
+	 */
+	protected static function extend_kses_for_frontend( $allowed_html ) {
+		$common_attrs = array(
+			'class'           => true,
+			'id'              => true,
+			'style'           => true,
+			'role'            => true,
+			'tabindex'        => true,
+			'contenteditable' => true,
+			'aria-label'      => true,
+			'aria-hidden'     => true,
+			'aria-expanded'   => true,
+			'aria-controls'   => true,
+			'title'           => true,
+		);
+
+		$data_attrs = array(
+			'data-orderable-trigger'              => true,
+			'data-orderable-product-id'           => true,
+			'data-orderable-product-type'         => true,
+			'data-orderable-variation-id'         => true,
+			'data-orderable-variation-attributes' => true,
+			'data-orderable-cart-item-key'        => true,
+			'data-orderable-quantity'             => true,
+			'data-orderable-product-quantity'     => true,
+			'data-orderable-updating-quantity'    => true,
+			'data-orderable-focus'                => true,
+			'data-orderable-tabs'                 => true,
+			'data-orderable-scroll-id'            => true,
+			'data-orderable-day'                  => true,
+			'data-orderable-time'                 => true,
+			'data-orderable-time-slot-id'         => true,
+			'data-orderable-period'               => true,
+			'data-orderable-alt-text'             => true,
+			'data-orderable-mute-status'          => true,
+			'data-quantity'                       => true,
+			'data-product_id'                     => true,
+			'data-product_sku'                    => true,
+			'data-product_name'                   => true,
+			'data-cart_item_key'                  => true,
+			'data-price'                          => true,
+		);
+
+		$tag_attrs = array_merge( $common_attrs, $data_attrs );
+
+		$frontend_tags = array(
+			'a',
+			'button',
+			'div',
+			'span',
+			'p',
+			'img',
+			'ul',
+			'ol',
+			'li',
+			'h1',
+			'h2',
+			'h3',
+			'h4',
+			'h5',
+			'h6',
+			'strong',
+			'em',
+			'i',
+			'b',
+			'u',
+			's',
+			'small',
+			'big',
+			'br',
+			'hr',
+			'figure',
+			'figcaption',
+			'table',
+			'thead',
+			'tbody',
+			'tfoot',
+			'tr',
+			'td',
+			'th',
+			'caption',
+			'colgroup',
+			'col',
+			'dl',
+			'dt',
+			'dd',
+			'section',
+			'article',
+			'aside',
+			'header',
+			'footer',
+			'nav',
+			'label',
+			'fieldset',
+			'legend',
+			'form',
+			'input',
+			'select',
+			'option',
+			'optgroup',
+			'textarea',
+			'svg',
+			'path',
+			'rect',
+			'g',
+			'circle',
+			'polygon',
+			'line',
+			'polyline',
+			'use',
+			'defs',
+			'title',
+			'del',
+			'ins',
+			'bdi',
+			'mark',
+		);
+
+		foreach ( $frontend_tags as $tag ) {
+			$existing                = isset( $allowed_html[ $tag ] ) && is_array( $allowed_html[ $tag ] ) ? $allowed_html[ $tag ] : array();
+			$allowed_html[ $tag ]    = array_merge( $existing, $tag_attrs );
+		}
+
+		// Element-specific extras that aren't in `post` kses.
+		$allowed_html['a'] = array_merge(
+			$allowed_html['a'],
+			array(
+				'href'     => true,
+				'target'   => true,
+				'rel'      => true,
+				'download' => true,
+			)
+		);
+
+		$allowed_html['button'] = array_merge(
+			$allowed_html['button'],
+			array(
+				'type'     => true,
+				'name'     => true,
+				'value'    => true,
+				'disabled' => true,
+			)
+		);
+
+		$allowed_html['form'] = array_merge(
+			$allowed_html['form'],
+			array(
+				'action'       => true,
+				'method'       => true,
+				'enctype'      => true,
+				'name'         => true,
+				'target'       => true,
+				'autocomplete' => true,
+				'novalidate'   => true,
+			)
+		);
+
+		$allowed_html['input'] = array_merge(
+			$allowed_html['input'],
+			array(
+				'type'         => true,
+				'name'         => true,
+				'value'        => true,
+				'placeholder'  => true,
+				'required'     => true,
+				'min'          => true,
+				'max'          => true,
+				'step'         => true,
+				'checked'      => true,
+				'disabled'     => true,
+				'readonly'     => true,
+				'pattern'      => true,
+				'autocomplete' => true,
+				'maxlength'    => true,
+				'minlength'    => true,
+				'size'         => true,
+			)
+		);
+
+		$allowed_html['select'] = array_merge(
+			$allowed_html['select'],
+			array(
+				'name'     => true,
+				'multiple' => true,
+				'required' => true,
+				'disabled' => true,
+				'size'     => true,
+			)
+		);
+
+		$allowed_html['option'] = array_merge(
+			$allowed_html['option'],
+			array(
+				'value'    => true,
+				'selected' => true,
+				'disabled' => true,
+			)
+		);
+
+		$allowed_html['textarea'] = array_merge(
+			$allowed_html['textarea'],
+			array(
+				'name'        => true,
+				'rows'        => true,
+				'cols'        => true,
+				'placeholder' => true,
+				'required'    => true,
+				'maxlength'   => true,
+				'disabled'    => true,
+				'readonly'    => true,
+			)
+		);
+
+		$allowed_html['img'] = array_merge(
+			$allowed_html['img'],
+			array(
+				'src'        => true,
+				'srcset'     => true,
+				'sizes'      => true,
+				'alt'        => true,
+				'width'      => true,
+				'height'     => true,
+				'loading'    => true,
+				'decoding'   => true,
+				'fetchpriority' => true,
+			)
+		);
+
+		// SVG and child elements (used by inline icons in frontend output).
+		$svg_attrs = array(
+			'xmlns'           => true,
+			'viewbox'         => true,
+			'width'           => true,
+			'height'          => true,
+			'fill'            => true,
+			'fill-rule'       => true,
+			'clip-rule'       => true,
+			'stroke'          => true,
+			'stroke-width'    => true,
+			'shape-rendering' => true,
+			'text-rendering'  => true,
+			'image-rendering' => true,
+			'class'           => true,
+			'aria-hidden'     => true,
+			'role'            => true,
+		);
+
+		$allowed_html['svg']  = array_merge( $allowed_html['svg'], $svg_attrs );
+		$allowed_html['path'] = array_merge(
+			$allowed_html['path'],
+			array(
+				'd'            => true,
+				'fill'         => true,
+				'fill-rule'    => true,
+				'clip-rule'    => true,
+				'stroke'       => true,
+				'stroke-width' => true,
+			)
+		);
+		$allowed_html['rect'] = array_merge(
+			$allowed_html['rect'],
+			array(
+				'x'      => true,
+				'y'      => true,
+				'width'  => true,
+				'height' => true,
+				'fill'   => true,
+				'rx'     => true,
+				'ry'     => true,
+			)
+		);
+		$allowed_html['g']      = array_merge( $allowed_html['g'], array( 'fill' => true ) );
+		$allowed_html['circle'] = array_merge(
+			$allowed_html['circle'],
+			array(
+				'cx'   => true,
+				'cy'   => true,
+				'r'    => true,
+				'fill' => true,
+			)
+		);
+
+		/**
+		 * Filter the frontend kses allowlist.
+		 *
+		 * Use this filter to add tags, attributes, or `data-*` attributes that
+		 * a theme or extension emits via Orderable's frontend hooks but that
+		 * are not part of the default allowlist.
+		 *
+		 * @since 1.21.1
+		 * @hook  orderable_frontend_kses_allowed_html
+		 * @param array $allowed_html The kses allowlist.
+		 * @return array
+		 */
+		return apply_filters( 'orderable_frontend_kses_allowed_html', $allowed_html );
 	}
 
 	/**
@@ -309,7 +670,7 @@ class Orderable_Helpers {
 
 		// If error storing temporarily, unlink.
 		if ( is_wp_error( $tmp ) ) {
-			@unlink( $file_array['tmp_name'] );
+			wp_delete_file( $file_array['tmp_name'] );
 
 			return false;
 		}
@@ -319,7 +680,7 @@ class Orderable_Helpers {
 
 		// If error storing permanently, unlink.
 		if ( is_wp_error( $id ) ) {
-			@unlink( $file_array['tmp_name'] );
+			wp_delete_file( $file_array['tmp_name'] );
 
 			return false;
 		}

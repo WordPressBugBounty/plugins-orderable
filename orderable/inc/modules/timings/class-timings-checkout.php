@@ -75,7 +75,7 @@ class Orderable_Timings_Checkout {
 							<option value="asap"><?php esc_html_e( 'As soon as possible', 'orderable' ); ?></option>
 						<?php } ?>
 						<?php foreach ( $service_dates as $service_date_data ) { ?>
-							<option value="<?php echo esc_attr( $service_date_data['timestamp'] ); ?>" data-orderable-slots="<?php echo wc_esc_json( json_encode( array_values( $service_date_data['slots'] ) ) ); ?>"><?php echo $service_date_data['formatted']; ?></option>
+							<option value="<?php echo esc_attr( $service_date_data['timestamp'] ); ?>" data-orderable-slots="<?php echo esc_attr( wp_json_encode( array_values( $service_date_data['slots'] ) ) ); ?>"><?php echo esc_html( $service_date_data['formatted'] ); ?></option>
 						<?php } ?>
 					</select>
 				</td>
@@ -85,8 +85,8 @@ class Orderable_Timings_Checkout {
 					<label for="orderable-time">
 						<strong>
 							<?php
-							// Translators: %s Service type.
-							printf( __( '%s Time', 'orderable' ), $service );
+							/* translators: %s - service type label, e.g. "Delivery" or "Pickup". */
+							printf( esc_html__( '%s Time', 'orderable' ), esc_html( $service ) );
 							?>
 						</strong>
 					</label>
@@ -94,7 +94,7 @@ class Orderable_Timings_Checkout {
 				<td>
 					<input type="hidden" value="" name="orderable_order_time_slot_id" />
 					<select name="orderable_order_time" id="orderable-time" class="orderable-order-timings__time" disabled="disabled">
-						<option value=""><?php _e( 'Select a time...', 'orderable' ); ?></option>
+						<option value=""><?php esc_html_e( 'Select a time...', 'orderable' ); ?></option>
 						<?php if ( ! empty( $asap['time'] ) ) { ?>
 							<option value="asap"><?php esc_html_e( 'As soon as possible', 'orderable' ); ?></option>
 						<?php } ?>

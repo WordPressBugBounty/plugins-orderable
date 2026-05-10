@@ -28,8 +28,10 @@ class Orderable_Drawer_Ajax {
 	 * Modify cart item qty.
 	 */
 	public static function cart_quantity() {
-		$product_id    = empty( $_POST['product_id'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['product_id'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-		$cart_item_key = empty( $_POST['cart_item_key'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['cart_item_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		check_ajax_referer( 'orderable_ajax', 'nonce' );
+
+		$product_id    = empty( $_POST['product_id'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['product_id'] ) );
+		$cart_item_key = empty( $_POST['cart_item_key'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['cart_item_key'] ) );
 		$quantity      = filter_input( INPUT_POST, 'quantity', FILTER_SANITIZE_NUMBER_INT );
 
 		if ( empty( $product_id ) || empty( $cart_item_key ) || ! is_numeric( $quantity ) ) {
@@ -61,7 +63,7 @@ class Orderable_Drawer_Ajax {
 
 			if ( $_product->get_stock_quantity() < ( $held_stock + $quantity ) ) {
 				/* translators: 1: product name 2: quantity in stock */
-				wc_add_notice( sprintf( __( 'Sorry, we do not have enough "%1$s" in stock to fulfill your order (%2$s available). We apologize for any inconvenience caused.', 'woocommerce' ), $_product->get_name(), wc_format_stock_quantity_for_display( $_product->get_stock_quantity() - $held_stock, $_product ) ), 'error' );
+				wc_add_notice( sprintf( __( 'Sorry, we do not have enough "%1$s" in stock to fulfill your order (%2$s available). We apologize for any inconvenience caused.', 'orderable' ), $_product->get_name(), wc_format_stock_quantity_for_display( $_product->get_stock_quantity() - $held_stock, $_product ) ), 'error' );
 
 				$passed_validation = false;
 			}
@@ -83,11 +85,13 @@ class Orderable_Drawer_Ajax {
 	 * Update cart item attributes and addons.
 	 */
 	public static function update_cart_item_options() {
-		if ( empty( $_POST['cart_item_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		check_ajax_referer( 'orderable_ajax', 'nonce' );
+
+		if ( empty( $_POST['cart_item_key'] ) ) {
 			wp_send_json_error( null, 400 );
 		}
 
-		$cart_item_key    = sanitize_text_field( wp_unslash( $_POST['cart_item_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$cart_item_key    = sanitize_text_field( wp_unslash( $_POST['cart_item_key'] ) );
 		$product_id       = absint( filter_input( INPUT_POST, 'product_id', FILTER_SANITIZE_NUMBER_INT ) );
 		$attributes       = self::get_attributes();
 		$variation_id     = empty( $attributes ) ? 0 : absint( filter_input( INPUT_POST, 'variation_id', FILTER_SANITIZE_NUMBER_INT ) );
@@ -139,12 +143,11 @@ class Orderable_Drawer_Ajax {
 	 * @return array.
 	 */
 	protected static function get_attributes() {
-		if ( empty( $_POST['attributes'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( empty( $_POST['attributes'] ) ) {
 			return array();
 		}
 
 		$attributes = array_filter(
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
 			(array) json_decode( sanitize_text_field( wp_unslash( $_POST['attributes'] ) ) ),
 			function( $attribute_value, $attribute_name ) {
 
@@ -170,7 +173,6 @@ class Orderable_Drawer_Ajax {
 			return array();
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$orderable_fields = empty( $_POST['orderable_fields'] ) ? array() : map_deep( wp_unslash( $_POST['orderable_fields'] ), 'sanitize_text_field' );
 
 		if ( empty( $orderable_fields ) || ! is_array( $orderable_fields ) ) {

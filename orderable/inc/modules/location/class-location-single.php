@@ -1128,25 +1128,33 @@ class Orderable_Location_Single {
 			return (bool) $cache_result;
 		}
 
-		$allow_empty_clause = $allow_empty ? 'OR (l.zone_id IS NULL AND ts.has_zones = 0)' : '';
-
-		$query = $wpdb->prepare(
-			"SELECT 
-    			COUNT(*) 
-			FROM 
-				{$wpdb->prefix}orderable_location_delivery_zones_lookup l
-			LEFT JOIN 
-				{$wpdb->prefix}orderable_location_time_slots ts
-				ON l.time_slot_id = ts.time_slot_id
-			WHERE 
-				l.location_id = %d 
-			AND 
-				( l.zone_id = %d {$allow_empty_clause} )",
-			$location_id,
-			$zone_id
-		);
-
-		$result = $wpdb->get_var( $query );
+		if ( $allow_empty ) {
+			$result = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*)
+					FROM {$wpdb->prefix}orderable_location_delivery_zones_lookup l
+					LEFT JOIN {$wpdb->prefix}orderable_location_time_slots ts
+						ON l.time_slot_id = ts.time_slot_id
+					WHERE l.location_id = %d
+						AND ( l.zone_id = %d OR ( l.zone_id IS NULL AND ts.has_zones = 0 ) )",
+					$location_id,
+					$zone_id
+				)
+			);
+		} else {
+			$result = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(*)
+					FROM {$wpdb->prefix}orderable_location_delivery_zones_lookup l
+					LEFT JOIN {$wpdb->prefix}orderable_location_time_slots ts
+						ON l.time_slot_id = ts.time_slot_id
+					WHERE l.location_id = %d
+						AND l.zone_id = %d",
+					$location_id,
+					$zone_id
+				)
+			);
+		}
 
 		$has_zone = $result > 0;
 

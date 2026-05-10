@@ -67,7 +67,7 @@ class Orderable_Location_Holidays_Meta_Box {
 				<?php if ( $should_show_enable_default_holidays_field ) : ?>
 					<div class="orderable-fields-row__body-row">
 						<div class="orderable-fields-row__body-row-left">
-							<h3><?php echo esc_html__( 'Enable default holidays', 'orderable-pro' ); ?></h3>
+							<h3><?php echo esc_html__( 'Enable default holidays', 'orderable' ); ?></h3>
 							<p>
 								<?php
 									echo wp_kses_post(
@@ -80,7 +80,7 @@ class Orderable_Location_Holidays_Meta_Box {
 											'orderable_location_holiday_setting_description',
 											sprintf(
 												// translators: %s - Orderable settings URL.
-												__( 'You can change the default holidays on the <a href="%s" target="_blank">settings page</a>.', 'orderable-pro' ),
+												__( 'You can change the default holidays on the <a href="%s" target="_blank">settings page</a>.', 'orderable' ),
 												esc_url( admin_url( 'admin.php?page=orderable-settings' ) )
 											)
 										),
@@ -93,7 +93,7 @@ class Orderable_Location_Holidays_Meta_Box {
 								<span
 									class="orderable-toggle-field orderable-enable-default_holidays-toggle-field woocommerce-input-toggle woocommerce-input-toggle--<?php echo esc_attr( $class_toggle_field_value ); ?>"
 								>
-									<?php echo esc_html( 'Yes' ); ?>
+									<?php echo esc_html__( 'Yes', 'orderable' ); ?>
 								</span>
 
 								<input
@@ -109,9 +109,9 @@ class Orderable_Location_Holidays_Meta_Box {
 
 				<div class="orderable-fields-row__body-row">
 					<div class="orderable-fields-row__body-row-left">
-						<h3><?php echo esc_html_x( 'Holidays', 'Order Options', 'orderable-pro' ); ?></h3>
+						<h3><?php echo esc_html_x( 'Holidays', 'Order Options', 'orderable' ); ?></h3>
 						<p>
-							<?php echo esc_html__( 'Days when your location is closed.', 'orderable-pro' ); ?>
+							<?php echo esc_html__( 'Days when your location is closed.', 'orderable' ); ?>
 						</p>
 					</div>
 					<div class="orderable-fields-row__body-row-right orderable-holidays__holidays">

@@ -91,10 +91,6 @@
 									0 === value.indexOf( 'pro_' )
 								) {
 									reload_preview = false;
-
-									$( document.body ).trigger(
-										'orderable-pro-modal'
-									);
 								}
 
 								data[
@@ -119,6 +115,7 @@
 			reload_preview( preview_data ) {
 				const data = {
 					action: 'orderable_preview',
+					nonce: orderable_layouts_vars.nonce,
 					data: preview_data,
 				};
 

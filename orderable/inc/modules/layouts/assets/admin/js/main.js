@@ -66,7 +66,6 @@
             // Has a "pro_" prefix.
             if (typeof value === 'string' && 0 === value.indexOf('pro_')) {
               reload_preview = false;
-              $(document.body).trigger('orderable-pro-modal');
             }
             data[orderable_layouts.helpers.strip_prefix(this.name.replace('[]', ''))] = value;
           });
@@ -83,6 +82,7 @@
       reload_preview(preview_data) {
         const data = {
           action: 'orderable_preview',
+          nonce: orderable_layouts_vars.nonce,
           data: preview_data
         };
         $.post(ajaxurl, data, function (response) {

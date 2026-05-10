@@ -1,4 +1,7 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Title: Order Confirmation
  * Description: Order Confirmation ticket pattern

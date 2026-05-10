@@ -26,6 +26,61 @@ $style      = Orderable_Drawer_Settings::get_cart_icon_css();
 ?>
 
 <div class="orderable-floating-cart orderable-floating-cart--<?php echo esc_attr( $position ); ?>" data-orderable-trigger="cart" style="<?php echo esc_attr( $style ); ?>">
-	<button class="orderable-floating-cart__button"><?php echo file_get_contents( ORDERABLE_PATH . 'assets/icons/basket.svg' ); ?></button>
+	<button class="orderable-floating-cart__button">
+		<?php
+		$svg_path = ORDERABLE_PATH . 'assets/icons/basket.svg';
+		$svg_html = is_readable( $svg_path ) ? file_get_contents( $svg_path ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Plugin-shipped SVG asset.
+
+		echo wp_kses(
+			$svg_html,
+			array(
+				'svg'    => array(
+					'xmlns'           => true,
+					'viewbox'         => true,
+					'width'           => true,
+					'height'          => true,
+					'fill'            => true,
+					'fill-rule'       => true,
+					'clip-rule'       => true,
+					'shape-rendering' => true,
+					'text-rendering'  => true,
+					'image-rendering' => true,
+					'class'           => true,
+					'aria-hidden'     => true,
+					'role'            => true,
+				),
+				'g'      => array(
+					'fill'      => true,
+					'fill-rule' => true,
+					'clip-rule' => true,
+				),
+				'path'   => array(
+					'd'            => true,
+					'fill'         => true,
+					'fill-rule'    => true,
+					'clip-rule'    => true,
+					'stroke'       => true,
+					'stroke-width' => true,
+				),
+				'rect'   => array(
+					'x'      => true,
+					'y'      => true,
+					'width'  => true,
+					'height' => true,
+					'fill'   => true,
+					'rx'     => true,
+					'ry'     => true,
+				),
+				'circle' => array(
+					'cx'   => true,
+					'cy'   => true,
+					'r'    => true,
+					'fill' => true,
+				),
+				'title'  => array(),
+			)
+		);
+		?>
+	</button>
 	<span class="orderable-floating-cart__count"><?php echo wp_kses_data( $cart_count ); ?></span>
 </div>

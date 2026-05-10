@@ -49,17 +49,35 @@ do_action( 'woocommerce_before_mini_cart' ); ?>
 							</button>
 						<?php endif; ?>
 						<?php
-						echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							'woocommerce_cart_item_remove_link',
-							sprintf(
-								'<a href="%s" class="orderable-mini-cart-item__remove remove_from_cart_button" aria-label="%s" data-product_id="%s" data-cart_item_key="%s" data-product_sku="%s"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none" width="20" height="20"/><g><path d="M12 4h3c.6 0 1 .4 1 1v1H3V5c0-.6.5-1 1-1h3c.2-1.1 1.3-2 2.5-2s2.3.9 2.5 2zM8 4h3c-.2-.6-.9-1-1.5-1S8.2 3.4 8 4zM4 7h11l-.9 10.1c0 .5-.5.9-1 .9H5.9c-.5 0-.9-.4-1-.9L4 7z"/></g></svg></a>',
-								esc_url( wc_get_cart_remove_url( $cart_item_key ) ),
-								esc_attr__( 'Remove this item', 'woocommerce' ),
-								esc_attr( $product_id ),
-								esc_attr( $cart_item_key ),
-								esc_attr( $_product->get_sku() )
+						$remove_link_allowed_html = array(
+							'a'    => array(
+								'href'             => true,
+								'class'            => true,
+								'aria-label'       => true,
+								'data-product_id'  => true,
+								'data-cart_item_key' => true,
+								'data-product_sku' => true,
 							),
-							$cart_item_key
+							'svg'  => array( 'xmlns' => true, 'viewbox' => true ),
+							'rect' => array( 'x' => true, 'fill' => true, 'width' => true, 'height' => true ),
+							'g'    => array(),
+							'path' => array( 'd' => true ),
+						);
+
+						echo wp_kses(
+							apply_filters(
+								'woocommerce_cart_item_remove_link',
+								sprintf(
+									'<a href="%s" class="orderable-mini-cart-item__remove remove_from_cart_button" aria-label="%s" data-product_id="%s" data-cart_item_key="%s" data-product_sku="%s"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect x="0" fill="none" width="20" height="20"/><g><path d="M12 4h3c.6 0 1 .4 1 1v1H3V5c0-.6.5-1 1-1h3c.2-1.1 1.3-2 2.5-2s2.3.9 2.5 2zM8 4h3c-.2-.6-.9-1-1.5-1S8.2 3.4 8 4zM4 7h11l-.9 10.1c0 .5-.5.9-1 .9H5.9c-.5 0-.9-.4-1-.9L4 7z"/></g></svg></a>',
+									esc_url( wc_get_cart_remove_url( $cart_item_key ) ),
+									esc_attr__( 'Remove this item', 'orderable' ),
+									esc_attr( $product_id ),
+									esc_attr( $cart_item_key ),
+									esc_attr( $_product->get_sku() )
+								),
+								$cart_item_key
+							),
+							$remove_link_allowed_html
 						);
 						?>
 						<strong><?php echo wp_kses_post( $product_name ); ?></strong>
@@ -102,7 +120,7 @@ do_action( 'woocommerce_before_mini_cart' ); ?>
 
 <?php else : ?>
 
-	<p class="orderable-mini-cart__empty-message"><?php esc_html_e( 'No products in the cart.', 'woocommerce' ); ?></p>
+	<p class="orderable-mini-cart__empty-message"><?php esc_html_e( 'No products in the cart.', 'orderable' ); ?></p>
 
 <?php endif; ?>
 

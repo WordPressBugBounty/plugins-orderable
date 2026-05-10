@@ -28,7 +28,7 @@ class Orderable_Notifications {
 	public static function register_settings( $settings = array() ) {
 		$settings['tabs'][] = array(
 			'id'       => 'notifications',
-			'title'    => __( 'Notifications', 'orderable-pro' ),
+			'title'    => __( 'Notifications', 'orderable' ),
 			'priority' => 50,
 		);
 
