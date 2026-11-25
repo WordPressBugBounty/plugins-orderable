@@ -64,12 +64,7 @@ class Orderable_Location_Zones {
 			$zone_fee = 0;
 
 			if ( $selected_location->has_zone( $zone_id ) ) {
-				$zone     = new WC_Shipping_Zone( $zone_id );
-				$zone_fee = floatval( $zone->get_meta( 'delivery_fee' ) );
-
-				if ( 0 > $zone_fee ) {
-					$zone_fee = 0;
-				}
+				$zone_fee = Orderable_Location_Zone_Fees::get( $zone_id );
 			}
 
 			$rates[ 'orderable_delivery:' . $zone_id ] = new WC_Shipping_Rate(
@@ -203,7 +198,7 @@ class Orderable_Location_Zones {
 		$zone['zone_postcodes'] = join( ',', $locations );
 
 		// Add fee data to the zone.
-		$zone['zone_fee']   = floatval( $zone_instance->get_meta( 'delivery_fee' ) );
+		$zone['zone_fee']   = Orderable_Location_Zone_Fees::get( $zone['zone_id'] );
 		$zone['time_slots'] = self::get_time_slots_for_zone( $zone['zone_id'] );
 
 		return $zone;

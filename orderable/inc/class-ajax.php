@@ -87,6 +87,8 @@ class Orderable_Ajax {
 
 	/**
 	 * Get cart item options for a variable product.
+	 *
+	 * @since 1.21.2 Select the current choices of an add-on field by group and field.
 	 */
 	public static function get_cart_item_options() {
 		check_ajax_referer( 'orderable_ajax', 'nonce' );
@@ -126,6 +128,18 @@ class Orderable_Ajax {
 			'images' => true,
 		);
 
+		$find_addon_field = function ( $group_id, $field_id ) use ( $cart_item ) {
+			$addon_fields = empty( $cart_item['orderable_fields'] ) ? array() : (array) $cart_item['orderable_fields'];
+
+			foreach ( $addon_fields as $addon_field ) {
+				if ( isset( $addon_field['id'], $addon_field['group_id'] ) && (int) $addon_field['id'] === (int) $field_id && (int) $addon_field['group_id'] === (int) $group_id ) {
+					return $addon_field;
+				}
+			}
+
+			return array();
+		};
+
 		add_filter(
 			'orderable_get_group_data',
 			/**
@@ -135,22 +149,24 @@ class Orderable_Ajax {
 			 *
 			 * @return array
 			 */
-			function( $field_group ) use ( $cart_item ) {
+			function( $field_group, $group_id = 0 ) use ( $find_addon_field ) {
 				foreach ( $field_group as $key => $value ) {
-					if ( empty( $cart_item['orderable_fields'][ $value['id'] ] ) ) {
+					$addon_field = $find_addon_field( $group_id, $value['id'] );
+
+					if ( ! $addon_field ) {
 						continue;
 					}
 
 					switch ( $value['type'] ) {
 						case 'text':
-							$field_group[ $key ]['default'] = $cart_item['orderable_fields'][ $value['id'] ]['value'];
+							$field_group[ $key ]['default'] = $addon_field['value'];
 
 							break;
 
 						case 'select':
 						case 'visual_radio':
 							foreach ( $value['options'] as $key_option => $option ) {
-								if ( $option['label'] === $cart_item['orderable_fields'][ $value['id'] ]['value'] ) {
+								if ( $option['label'] === $addon_field['value'] ) {
 									$field_group[ $key ]['options'][ $key_option ]['selected'] = '1';
 
 									break;
@@ -161,11 +177,11 @@ class Orderable_Ajax {
 
 						case 'visual_checkbox':
 							foreach ( $value['options'] as $key_option => $option ) {
-								if ( empty( $cart_item['orderable_fields'][ $value['id'] ]['value'] ) ) {
+								if ( empty( $addon_field['value'] ) ) {
 									continue;
 								}
 
-								$field_value = $cart_item['orderable_fields'][ $value['id'] ]['value'];
+								$field_value = $addon_field['value'];
 
 								if ( ! is_array( $field_value ) ) {
 									continue;
@@ -184,7 +200,9 @@ class Orderable_Ajax {
 				}
 
 				return $field_group;
-			}
+			},
+			10,
+			2
 		);
 
 		ob_start();

@@ -51,13 +51,12 @@ class Orderable_Location_Zones_CRUD_Handler {
 
 			$zone->set_locations( $locations );
 
-			// Add fee meta data, defaulting to free.
-			$fee = ! empty( $data['zone_fee'] ) ? preg_replace( '/[^0-9.]/m', '', $data['zone_fee'] ) : 0.00;
-			$zone->add_meta_data( 'delivery_fee', floatval( number_format( $fee, 2 ) ) );
-
 			// Create the zone and get the ID.
 			$data_store->create( $zone );
 			$new_zone_id = $zone->get_id();
+
+			// Save the fee, defaulting to free.
+			$fee = Orderable_Location_Zone_Fees::set( $new_zone_id, ! empty( $data['zone_fee'] ) ? $data['zone_fee'] : 0 );
 
 			// Add shipping methods.
 			$data_store->add_method( $new_zone_id, 'orderable_delivery', 100 );
@@ -70,7 +69,7 @@ class Orderable_Location_Zones_CRUD_Handler {
 				'zone_id'        => $new_zone_id,
 				'zone_name'      => $data['zone_name'],
 				'zone_postcodes' => join( ',', $normalized_postcodes ),
-				'zone_fee'       => floatval( number_format( $fee, 2 ) ),
+				'zone_fee'       => $fee,
 				'msg'            => esc_html(
 					sprintf(
 						/* translators: zone name */
@@ -141,7 +140,6 @@ class Orderable_Location_Zones_CRUD_Handler {
 			$zone       = new WC_Shipping_Zone( $data['zone_id'] );
 
 			$zone->set_zone_name( $data['zone_name'] );
-			$zone->update_meta_data( 'delivery_fee', $data['zone_fee'] );
 
 			$normalized_postcodes = array_map( 'wc_normalize_postcode', explode( ',', $data['zone_postcodes'] ) );
 			// clear postcodes but keep other locations type e.g. state, country.
@@ -155,12 +153,14 @@ class Orderable_Location_Zones_CRUD_Handler {
 
 			$data_store->update( $zone );
 
+			$fee = Orderable_Location_Zone_Fees::set( $data['zone_id'], $data['zone_fee'] );
+
 			return array(
 				'status'         => true,
 				'zone_id'        => $data['zone_id'],
 				'zone_name'      => $data['zone_name'],
 				'zone_postcodes' => $data['zone_postcodes'],
-				'zone_fee'       => $data['zone_fee'],
+				'zone_fee'       => $fee,
 				'msg'            => esc_html(
 					sprintf(
 						/* translators: zone name */
@@ -231,6 +231,9 @@ class Orderable_Location_Zones_CRUD_Handler {
 			),
 			'%d'
 		);
+
+		// Deleting the zone directly skips WooCommerce's delete hook, so drop its fee here.
+		Orderable_Location_Zone_Fees::delete( $zone_id );
 
 		$result =
 			false !== $delete_zones_lookup &&

@@ -2,9 +2,9 @@
 Contributors: orderable
 Tags: restaurant, food ordering, food menu, food delivery, restaurant menu
 Requires at least: 5.4
-Tested up to: 6.9
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.21.1
+Stable tag: 1.21.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -207,6 +207,10 @@ Great question. While we haven't tested every WordPress theme, Orderable was des
 Glad you asked! [Orderable Pro](https://orderable.com/?utm_source=orderable&utm_medium=wp.org&utm_campaign=readme) is an optional add-on to Orderable that adds additional revenue increasing features.
 
 == Changelog ==
+**v1.21.2** (24 Nov 2026)
+[fix] Product add-on options edited in the cart drawer are now checked before the cart line is updated
+[fix] Delivery zone fees reset to 0 on WooCommerce 10.5 and later
+
 **v1.21.01** (08 May 2026)
 [update] Maintenance updates
 - Bundled dependencies refreshed.

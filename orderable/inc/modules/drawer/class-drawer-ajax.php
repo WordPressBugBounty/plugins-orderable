@@ -83,6 +83,8 @@ class Orderable_Drawer_Ajax {
 
 	/**
 	 * Update cart item attributes and addons.
+	 *
+	 * @since 1.21.2 Validate the posted add-on fields against the product of the cart item, and answer with an error when the edit is not valid.
 	 */
 	public static function update_cart_item_options() {
 		check_ajax_referer( 'orderable_ajax', 'nonce' );
@@ -95,16 +97,19 @@ class Orderable_Drawer_Ajax {
 		$product_id       = absint( filter_input( INPUT_POST, 'product_id', FILTER_SANITIZE_NUMBER_INT ) );
 		$attributes       = self::get_attributes();
 		$variation_id     = empty( $attributes ) ? 0 : absint( filter_input( INPUT_POST, 'variation_id', FILTER_SANITIZE_NUMBER_INT ) );
-		$orderable_fields = self::get_orderable_fields();
+		$cart_item        = WC()->cart->get_cart_item( $cart_item_key );
+		$orderable_fields = self::get_orderable_fields( empty( $cart_item ) ? $product_id : $cart_item['product_id'] );
+
+		if ( is_wp_error( $orderable_fields ) ) {
+			wp_send_json_error( array( 'message' => implode( ' ', $orderable_fields->get_error_messages() ) ), 400 );
+		}
 
 		if (
 			empty( $cart_item_key ) ||
-			( empty( $attributes ) && empty( $orderable_fields ) )
+			( empty( $attributes ) && null === $orderable_fields )
 		) {
 			wp_send_json_error( null, 400 );
 		}
-
-		$cart_item = WC()->cart->get_cart_item( $cart_item_key );
 
 		if ( empty( $cart_item ) ) {
 			wp_send_json_error();
@@ -130,7 +135,12 @@ class Orderable_Drawer_Ajax {
 			wp_send_json_success();
 		}
 
-		self::update_cart_item_attributes( $cart_item, $variation_id, $attributes, $orderable_fields );
+		if ( ! self::update_cart_item_attributes( $cart_item, $variation_id, $attributes, $orderable_fields ) ) {
+			$notices = array_map( 'wp_strip_all_tags', wp_list_pluck( wc_get_notices( 'error' ), 'notice' ) );
+
+			wc_clear_notices();
+			wp_send_json_error( array( 'message' => implode( ' ', $notices ) ), 400 );
+		}
 
 		WC()->cart->calculate_totals();
 
@@ -162,21 +172,50 @@ class Orderable_Drawer_Ajax {
 	/**
 	 * Get Orderable Product Addons fields.
 	 *
-	 * @return array
+	 * @since 1.21.2 Validate the posted add-on fields with the `orderable_validated_addon_fields` filter, take the product ID, and return the errors found.
+	 *
+	 * @param int $product_id Product ID.
+	 *
+	 * @return array|WP_Error|null Null when no add-on fields were posted, an empty array when all were cleared, the fields to store on the cart item, or the errors found in the posted values.
 	 */
-	protected static function get_orderable_fields() {
+	protected static function get_orderable_fields( $product_id ) {
+		if ( ! has_filter( 'orderable_validated_addon_fields' ) ) {
+			return self::get_unvalidated_orderable_fields();
+		}
+
+		/**
+		 * Filters the add-on fields posted with the request, validated for the product.
+		 *
+		 * @since 1.21.2
+		 * @hook orderable_validated_addon_fields
+		 * @param  array|WP_Error|null $fields     The add-on fields to store on the cart item. Default: null, meaning no add-on fields were posted.
+		 * @param  int                 $product_id Product ID.
+		 * @return array|WP_Error|null New value
+		 */
+		return apply_filters( 'orderable_validated_addon_fields', null, $product_id );
+	}
+
+	/**
+	 * Get Orderable Product Addons fields for a version of Orderable Pro that does not validate them.
+	 *
+	 * @since 1.21.2
+	 *
+	 * @return array|null The add-on fields to store on the cart item, or null when none were posted.
+	 */
+	protected static function get_unvalidated_orderable_fields() {
 
 		if (
 			! class_exists( 'Orderable_Addons_Pro_Field_Groups' ) ||
-			! class_exists( 'Orderable_Addons_Pro_Fees' )
+			! class_exists( 'Orderable_Addons_Pro_Fees' ) ||
+			! isset( $_POST['orderable_fields'] )
 		) {
-			return array();
+			return null;
 		}
 
-		$orderable_fields = empty( $_POST['orderable_fields'] ) ? array() : map_deep( wp_unslash( $_POST['orderable_fields'] ), 'sanitize_text_field' );
+		$orderable_fields = map_deep( wp_unslash( $_POST['orderable_fields'] ), 'sanitize_text_field' );
 
-		if ( empty( $orderable_fields ) || ! is_array( $orderable_fields ) ) {
-			return array();
+		if ( ! is_array( $orderable_fields ) ) {
+			return null;
 		}
 
 		$orderable_item_data = array();
@@ -202,19 +241,20 @@ class Orderable_Drawer_Ajax {
 	/**
 	 * Update cart item attributes.
 	 *
-	 * @param array $original_cart_item The cart item to be updated.
-	 * @param int   $variation_id       The new variation ID.
-	 * @param array $attributes         The new attributes.
-	 * @return void
+	 * @since 1.21.2 Return whether the cart item was updated.
+	 *
+	 * @param array      $original_cart_item The cart item to be updated.
+	 * @param int        $variation_id       The new variation ID.
+	 * @param array      $attributes         The new attributes.
+	 * @param array|null $cart_item_data     The new add-on fields, or null to keep the ones of the cart item.
+	 * @return bool Whether the cart item was updated.
 	 */
 	protected static function update_cart_item_attributes( $original_cart_item, $variation_id, $attributes, $cart_item_data ) {
-		if ( empty( $cart_item_data ) && ! empty( $original_cart_item['orderable_fields'] ) ) {
+		if ( null === $cart_item_data && ! empty( $original_cart_item['orderable_fields'] ) ) {
 			$cart_item_data = $original_cart_item['orderable_fields'];
 		}
 
-		if ( ! empty( $cart_item_data ) ) {
-			$cart_item_data = array( 'orderable_fields' => $cart_item_data );
-		}
+		$cart_item_data = empty( $cart_item_data ) ? array() : array( 'orderable_fields' => $cart_item_data );
 
 		/**
 		 * WooCommerce stores empty attributes ('variation' on the cart item)
@@ -230,6 +270,10 @@ class Orderable_Drawer_Ajax {
 		 * WooCommerce hooks.
 		 */
 		$updated_cart_item_key = WC()->cart->add_to_cart( $original_cart_item['product_id'], $original_cart_item['quantity'], $variation_id, $attributes, $cart_item_data );
+
+		if ( false === $updated_cart_item_key ) {
+			return false;
+		}
 
 		$cart_content = WC()->cart->get_cart();
 
@@ -253,5 +297,7 @@ class Orderable_Drawer_Ajax {
 		}
 
 		WC()->cart->set_cart_contents( $cart_content_updated );
+
+		return true;
 	}
 }

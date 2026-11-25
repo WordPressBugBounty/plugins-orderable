@@ -565,7 +565,27 @@
         $(document.body).trigger('added_to_cart', [response.fragments, response.cart_hash, $element]);
         $(document.body).trigger('orderable-drawer.open', args);
         $element.removeClass(orderable_products.vars.classes.button_loading);
+      }, function (response) {
+        $element.removeClass(orderable_products.vars.classes.button_loading);
+        orderable_products.show_update_error(response);
       });
+    },
+    /**
+     * Show the error returned when a cart item update is refused.
+     *
+     * @param {Object} response The failed AJAX response.
+     */
+    show_update_error(response) {
+      const message = response?.responseJSON?.data?.message || '';
+      document.querySelector('.orderable-update-error')?.remove();
+      if (!message) {
+        return;
+      }
+      const error = document.createElement('p');
+      error.className = 'orderable-update-error';
+      error.setAttribute('role', 'alert');
+      error.textContent = message;
+      document.querySelector('.orderable-drawer .orderable-product__options-wrap')?.prepend(error);
     },
     /**
      * Convert [{name:x, value:y }] to {x:y} format.
@@ -633,8 +653,9 @@
      *
      * @param args
      * @param callback
+     * @param error_callback
      */
-    update_cart_item_options(args, callback) {
+    update_cart_item_options(args, callback, error_callback) {
       if (typeof args.cart_item_key === 'undefined') {
         return;
       }
@@ -656,6 +677,10 @@
         }
         if (typeof callback === 'function') {
           callback(response);
+        }
+      }).fail(function (response) {
+        if (typeof error_callback === 'function') {
+          error_callback(response);
         }
       });
     },

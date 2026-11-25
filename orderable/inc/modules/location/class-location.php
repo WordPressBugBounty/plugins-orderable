@@ -37,6 +37,7 @@ class Orderable_Location {
 				'location-zones'              => 'Orderable_Location_Zones',
 				'location-zones-admin'        => 'Orderable_Location_Zones_Admin',
 				'location-zones-crud-handler' => 'Orderable_Location_Zones_CRUD_Handler',
+				'location-zone-fees'          => 'Orderable_Location_Zone_Fees',
 			),
 		);
 
